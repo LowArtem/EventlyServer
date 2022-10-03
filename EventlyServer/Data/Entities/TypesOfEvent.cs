@@ -1,0 +1,17 @@
+﻿using System;
+using System.Collections.Generic;
+
+namespace EventlyServer.Data.Entities
+{
+    public partial class TypesOfEvent : Entity
+    {        
+        public string? Name { get; set; }
+
+        public virtual List<Template> Templates { get; set; }
+
+        public TypesOfEvent()
+        {
+            Templates = new List<Template>();
+        }
+    }
+}
