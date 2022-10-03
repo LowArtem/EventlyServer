@@ -8,7 +8,7 @@ namespace EventlyServer.Data.Entities
         public int Price { get; set; }
         public int? IdTypeOfEvent { get; set; }
 
-        public virtual TypesOfEvent? IdTypeOfEventNavigation { get; set; }
+        public virtual TypesOfEvent? ChosenTypeOfEvent { get; set; }
         public virtual List<LandingInvitation> LandingInvitations { get; set; }
 
         public Template()

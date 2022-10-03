@@ -9,6 +9,6 @@ namespace EventlyServer.Data.Entities
         public string? PhoneNumber { get; set; }
         public int? IdLandingInvitation { get; set; }
 
-        public virtual LandingInvitation? IdLandingInvitationNavigation { get; set; }
+        public virtual LandingInvitation? TakenInvitation { get; set; }
     }
 }

@@ -11,8 +11,8 @@ namespace EventlyServer.Data.Entities
         public int? IdClient { get; set; }
         public int? IdTemplate { get; set; }
 
-        public virtual User? IdClientNavigation { get; set; }
-        public virtual Template? IdTemplateNavigation { get; set; }
+        public virtual User? Client { get; set; }
+        public virtual Template? ChosenTemplate { get; set; }
         public virtual List<Guest> Guests { get; set; }
 
         public LandingInvitation()

@@ -10,6 +10,6 @@ namespace EventlyServer.Data.Repositories
         {
         }
 
-        public override IQueryable<Template> Items => base.Items.Include(item => item.IdTypeOfEventNavigation);
+        public override IQueryable<Template> Items => base.Items.Include(item => item.ChosenTypeOfEvent);
     }
 }
