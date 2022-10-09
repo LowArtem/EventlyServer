@@ -23,6 +23,12 @@ namespace EventlyServer.Data.Repositories.Abstracts
             _Set = context.Set<T>();
         }
 
+        public DbRepository(ApplicationContext context)
+        {
+            _context = context;
+            _Set = context.Set<T>();
+        }
+
 
         /// <summary>Коллекция элементов</summary>
         public virtual IQueryable<T> Items => _Set;
