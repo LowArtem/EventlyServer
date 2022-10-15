@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+using EventlyServer.Data.Entities.Abstract;
 
 namespace EventlyServer.Data.Entities
 {
     public partial class Template : Entity
-    {       
+    {
         public int Price { get; set; }
         public int? IdTypeOfEvent { get; set; }
 

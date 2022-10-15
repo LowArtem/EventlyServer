@@ -1,6 +1,5 @@
-﻿using EventlyServer.Data.Entities;
+using EventlyServer.Data.Entities;
 using EventlyServer.Data.Repositories.Abstracts;
-using System;
 
 namespace EventlyServer.Data.Repositories
 {

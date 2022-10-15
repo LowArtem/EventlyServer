@@ -1,5 +1,5 @@
-using EventlyServer.Data;
 using EventlyServer.Data.Repositories;
+using EventlyServer.Data;
 
 namespace EventlyServer
 {

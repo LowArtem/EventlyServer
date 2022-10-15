@@ -1,10 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+using EventlyServer.Data.Entities.Abstract;
 
 namespace EventlyServer.Data.Entities
 {
     public partial class TypesOfEvent : Entity
-    {        
+    {
         public string? Name { get; set; }
 
         public virtual List<Template> Templates { get; set; }

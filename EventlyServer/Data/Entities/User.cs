@@ -1,6 +1,5 @@
-﻿using EventlyServer.Data.Dto;
-using System;
-using System.Collections.Generic;
+using EventlyServer.Data.Dto;
+using EventlyServer.Data.Entities.Abstract;
 
 namespace EventlyServer.Data.Entities
 {
@@ -14,7 +13,6 @@ namespace EventlyServer.Data.Entities
         public bool IsAdmin { get; set; }
 
         public virtual List<LandingInvitation> LandingInvitations { get; set; }
-
 
         public User()
         {

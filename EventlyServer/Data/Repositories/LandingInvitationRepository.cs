@@ -1,4 +1,4 @@
-﻿using EventlyServer.Data.Entities;
+using EventlyServer.Data.Entities;
 using EventlyServer.Data.Repositories.Abstracts;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,6 +10,6 @@ namespace EventlyServer.Data.Repositories
         {
         }
 
-        public override IQueryable<LandingInvitation> Items => base.Items.Include(item => item.Guests);
+        public override IQueryable<LandingInvitation> Items => base.Items.Include(item => item.Responses);
     }
 }

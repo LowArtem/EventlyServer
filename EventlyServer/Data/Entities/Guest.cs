@@ -1,14 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using EventlyServer.Data.Entities.Abstract;
 
 namespace EventlyServer.Data.Entities
 {
     public partial class Guest : Entity
     {
-        public string? Name { get; set; }
-        public string? PhoneNumber { get; set; }
-        public int? IdLandingInvitation { get; set; }
+        public string Name { get; set; } = null!;
+        public string PhoneNumber { get; set; } = null!;
 
-        public virtual LandingInvitation? TakenInvitation { get; set; }
+        public virtual List<Response> Responses { get; set; }
+
+        public Guest()
+        {
+            Responses = new List<Response>();
+        }
     }
 }
