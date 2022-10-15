@@ -6,7 +6,7 @@ namespace EventlyServer.Data.Repositories
 {
     public class TemplateRepository : DbRepository<Template>
     {
-        public TemplateRepository(DbContext context) : base(context)
+        public TemplateRepository(ApplicationContext context) : base(context)
         {
         }
 

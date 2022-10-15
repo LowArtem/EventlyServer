@@ -6,12 +6,10 @@ namespace EventlyServer.Data.Repositories
 {
     public class LandingInvitationRepository : DbRepository<LandingInvitation>
     {
-        public LandingInvitationRepository(DbContext context) : base(context)
+        public LandingInvitationRepository(ApplicationContext context) : base(context)
         {
         }
 
-        public override IQueryable<LandingInvitation> Items => base.Items
-            .Include(item => item.Responses
-            .Where(r => r.LandingInvitationNavigation == item));
+        public override IQueryable<LandingInvitation> Items => base.Items.Include(item => item.Responses);
     }
 }
