@@ -68,12 +68,12 @@ namespace EventlyServer.Data
 
                 entity.Property(e => e.StartDate).HasColumnName("start_date");
 
-                entity.HasOne(d => d.IdClientNavigation)
+                entity.HasOne(d => d.Client)
                     .WithMany(p => p.LandingInvitations)
                     .HasForeignKey(d => d.IdClient)
                     .HasConstraintName("landing_invitations_id_client_fkey");
 
-                entity.HasOne(d => d.IdTemplateNavigation)
+                entity.HasOne(d => d.ChosenTemplate)
                     .WithMany(p => p.LandingInvitations)
                     .HasForeignKey(d => d.IdTemplate)
                     .HasConstraintName("landing_invitations_id_template_fkey");
@@ -92,13 +92,13 @@ namespace EventlyServer.Data
 
                 entity.Property(e => e.Date).HasColumnName("date");
 
-                entity.HasOne(d => d.IdGuestNavigation)
+                entity.HasOne(d => d.GuestNavigation)
                     .WithMany(p => p.Responses)
                     .HasForeignKey(d => d.IdGuest)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("responses_id_guest_fkey");
 
-                entity.HasOne(d => d.IdLandingInvitationNavigation)
+                entity.HasOne(d => d.LandingInvitationNavigation)
                     .WithMany(p => p.Responses)
                     .HasForeignKey(d => d.IdLandingInvitation)
                     .OnDelete(DeleteBehavior.ClientSetNull)
@@ -117,7 +117,7 @@ namespace EventlyServer.Data
                     .HasColumnType("money")
                     .HasColumnName("price");
 
-                entity.HasOne(d => d.IdTypeOfEventNavigation)
+                entity.HasOne(d => d.ChosenTypeOfEvent)
                     .WithMany(p => p.Templates)
                     .HasForeignKey(d => d.IdTypeOfEvent)
                     .HasConstraintName("templates_id_type_of_event_fkey");

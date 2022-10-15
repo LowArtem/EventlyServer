@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
+﻿
 namespace EventlyServer.Data.Entities
 {
     public partial class Response
@@ -9,7 +7,7 @@ namespace EventlyServer.Data.Entities
         public int IdGuest { get; set; }
         public int IdLandingInvitation { get; set; }
 
-        public virtual Guest IdGuestNavigation { get; set; } = null!;
-        public virtual LandingInvitation IdLandingInvitationNavigation { get; set; } = null!;
+        public virtual Guest GuestNavigation { get; set; } = null!;
+        public virtual LandingInvitation LandingInvitationNavigation { get; set; } = null!;
     }
 }

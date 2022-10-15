@@ -1,16 +1,10 @@
-﻿using EventlyServer.Data.Entities.Abstract;
-using System;
-using System.Collections.Generic;
+﻿using EventlyServer.Data.Dto;
+using EventlyServer.Data.Entities.Abstract;
 
 namespace EventlyServer.Data.Entities
 {
     public partial class User : Entity
     {
-        public User()
-        {
-            LandingInvitations = new HashSet<LandingInvitation>();
-        }
-
         public string Name { get; set; } = null!;
         public string Email { get; set; } = null!;
         public string Password { get; set; } = null!;
@@ -18,6 +12,23 @@ namespace EventlyServer.Data.Entities
         public string? OtherCommunication { get; set; }
         public bool IsAdmin { get; set; }
 
-        public virtual ICollection<LandingInvitation> LandingInvitations { get; set; }
+        public virtual List<LandingInvitation> LandingInvitations { get; set; }
+
+        public User()
+        {
+            LandingInvitations = new List<LandingInvitation>();
+        }
+
+        public User(UserDto dto)
+        {
+            Name = dto.Name;
+            Email = dto.Email;
+            Password = dto.Password;
+            PhoneNumber = dto.PhoneNumber;
+            OtherCommunication = dto.OtherCommunication;
+            IsAdmin = dto.IsAdmin;
+
+            LandingInvitations = new List<LandingInvitation>();
+        }
     }
 }
