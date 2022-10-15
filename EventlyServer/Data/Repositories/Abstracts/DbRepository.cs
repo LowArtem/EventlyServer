@@ -1,4 +1,4 @@
-﻿using EventlyServer.Data.Entities;
+using EventlyServer.Data.Entities;
 using EventlyServer.Data.Entities.Abstract;
 using Microsoft.EntityFrameworkCore;
 

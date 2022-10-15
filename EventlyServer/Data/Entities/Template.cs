@@ -1,4 +1,4 @@
-﻿using EventlyServer.Data.Entities.Abstract;
+using EventlyServer.Data.Entities.Abstract;
 
 namespace EventlyServer.Data.Entities
 {
