@@ -6,7 +6,7 @@ namespace EventlyServer.Data.Repositories
 {
     public class LandingInvitationRepository : DbRepository<LandingInvitation>
     {
-        public LandingInvitationRepository(ApplicationContext context) : base(context)
+        public LandingInvitationRepository(InHolidayContext context) : base(context)
         {
         }
 

@@ -6,7 +6,7 @@ namespace EventlyServer.Data.Repositories
 {
     public class UserRepository : DbRepository<User>
     {
-        public UserRepository(ApplicationContext context) : base(context)
+        public UserRepository(InHolidayContext context) : base(context)
         {
         }
 

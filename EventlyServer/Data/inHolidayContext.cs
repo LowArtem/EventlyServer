@@ -3,13 +3,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EventlyServer.Data
 {
-    public partial class ApplicationContext : DbContext
+    public partial class InHolidayContext : DbContext
     {
-        public ApplicationContext()
+        public InHolidayContext()
         {
         }
 
-        public ApplicationContext(DbContextOptions<ApplicationContext> options)
+        public InHolidayContext(DbContextOptions<InHolidayContext> options)
             : base(options)
         {
         }

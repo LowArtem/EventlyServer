@@ -24,7 +24,7 @@ namespace EventlyServer.Data.Repositories.Abstracts
             _Set = context.Set<T>();
         }
 
-        public DbRepository(ApplicationContext context)
+        public DbRepository(InHolidayContext context)
         {
             _context = context;
             _Set = context.Set<T>();

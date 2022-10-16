@@ -11,7 +11,7 @@ namespace EventlyServer
 
             // Add services to the container.
 
-            builder.Services.AddDbContext<ApplicationContext>();
+            builder.Services.AddDbContext<InHolidayContext>();
             builder.Services.AddRepositories();
             builder.Services.AddControllers();
 
