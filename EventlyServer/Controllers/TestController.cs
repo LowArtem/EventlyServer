@@ -1,5 +1,6 @@
 ﻿using EventlyServer.Data.Dto;
 using EventlyServer.Data.Entities;
+using EventlyServer.Data.Mappers;
 using EventlyServer.Data.Repositories.Abstracts;
 using Microsoft.AspNetCore.Mvc;
 
@@ -27,6 +28,6 @@ public class TestController : ControllerBase
     [Route("add")]
     public async Task<User> AddUser([FromBody] UserDto user)
     {
-        return await _userRepository.AddAsync(new User(user));
+        return await _userRepository.AddAsync(user.ToUser());
     }
 }

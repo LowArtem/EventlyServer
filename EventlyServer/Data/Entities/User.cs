@@ -1,4 +1,3 @@
-using EventlyServer.Data.Dto;
 using EventlyServer.Data.Entities.Abstract;
 
 namespace EventlyServer.Data.Entities;
@@ -19,15 +18,15 @@ public partial class User : Entity
         LandingInvitations = new List<LandingInvitation>();
     }
 
-    public User(UserDto dto)
+    public User(string name, string email, string password, string? phoneNumber, string? otherCommunication = null, bool isAdmin = false)
     {
-        Name = dto.Name;
-        Email = dto.Email;
-        Password = dto.Password;
-        PhoneNumber = dto.PhoneNumber;
-        OtherCommunication = dto.OtherCommunication;
-        IsAdmin = dto.IsAdmin;
-
+        Name = name;
+        Email = email;
+        Password = password;
+        PhoneNumber = phoneNumber;
+        OtherCommunication = otherCommunication;
+        IsAdmin = isAdmin;
+        
         LandingInvitations = new List<LandingInvitation>();
     }
 }
