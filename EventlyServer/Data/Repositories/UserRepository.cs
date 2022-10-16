@@ -2,14 +2,13 @@
 using EventlyServer.Data.Repositories.Abstracts;
 using Microsoft.EntityFrameworkCore;
 
-namespace EventlyServer.Data.Repositories
-{
-    public class UserRepository : DbRepository<User>
-    {
-        public UserRepository(InHolidayContext context) : base(context)
-        {
-        }
+namespace EventlyServer.Data.Repositories;
 
-        public override IQueryable<User> Items => base.Items.Include(items => items.LandingInvitations);
+public class UserRepository : DbRepository<User>
+{
+    public UserRepository(InHolidayContext context) : base(context)
+    {
     }
+
+    public override IQueryable<User> Items => base.Items.Include(items => items.LandingInvitations);
 }

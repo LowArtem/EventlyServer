@@ -1,7 +1,6 @@
-﻿namespace EventlyServer.Data.Entities.Abstract
+﻿namespace EventlyServer.Data.Entities.Abstract;
+
+public abstract class Entity
 {
-    public abstract class Entity
-    {
-        public int Id { get; set; }
-    }
+    public int Id { get; set; }
 }

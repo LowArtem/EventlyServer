@@ -1,16 +1,15 @@
 using EventlyServer.Data.Entities.Abstract;
 
-namespace EventlyServer.Data.Entities
+namespace EventlyServer.Data.Entities;
+
+public partial class TypesOfEvent : Entity
 {
-    public partial class TypesOfEvent : Entity
+    public string? Name { get; set; }
+
+    public virtual List<Template> Templates { get; set; }
+
+    public TypesOfEvent()
     {
-        public string? Name { get; set; }
-
-        public virtual List<Template> Templates { get; set; }
-
-        public TypesOfEvent()
-        {
-            Templates = new List<Template>();
-        }
+        Templates = new List<Template>();
     }
 }
