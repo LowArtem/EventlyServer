@@ -1,5 +1,9 @@
 using EventlyServer.Data.Repositories;
 using EventlyServer.Data;
+using EventlyServer.Services;
+using EventlyServer.Services.Security;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 
 namespace EventlyServer;
 
@@ -11,8 +15,25 @@ public static class Program
 
         // Add services to the container.
 
+        builder.Services.AddAuthorization();
+        builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(options =>
+            {
+                options.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidIssuer = AuthOptions.ISSUER,
+                    ValidateAudience = true,
+                    ValidAudience = AuthOptions.AUDIENCE,
+                    ValidateLifetime = true,
+                    IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
+                    ValidateIssuerSigningKey = true,
+                };
+            });
+        
         builder.Services.AddDbContext<InHolidayContext>();
         builder.Services.AddRepositories();
+        builder.Services.AddServices();
         builder.Services.AddControllers();
 
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -31,6 +52,7 @@ public static class Program
 
         app.UseHttpsRedirection();
 
+        app.UseAuthentication();
         app.UseAuthorization();
 
 
