@@ -2,6 +2,9 @@ using EventlyServer.Data.Entities.Abstract;
 
 namespace EventlyServer.Data.Entities;
 
+/// <summary>
+/// Зарегистрированный пользователь системы (это может быть клиент или администратор)
+/// </summary>
 public partial class User : Entity
 {
     public string Name { get; set; } = null!;

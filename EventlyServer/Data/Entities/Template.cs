@@ -2,6 +2,9 @@ using EventlyServer.Data.Entities.Abstract;
 
 namespace EventlyServer.Data.Entities;
 
+/// <summary>
+/// Сущность шаблона приглашения
+/// </summary>
 public partial class Template : Entity
 {
     public int Price { get; set; }

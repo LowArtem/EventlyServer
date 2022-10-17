@@ -2,6 +2,9 @@
 
 namespace EventlyServer.Data.Entities;
 
+/// <summary>
+/// Сущности гостя сервиса (гость может принять участие в мероприятии)
+/// </summary>
 public partial class Guest : Entity
 {
     public string Name { get; set; } = null!;

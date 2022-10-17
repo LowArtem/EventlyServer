@@ -1,6 +1,9 @@
 ﻿
 namespace EventlyServer.Data.Entities;
 
+/// <summary>
+/// Сущность отклика пользователя на приглашение
+/// </summary>
 public partial class Response
 {
     public DateTime Date { get; set; }

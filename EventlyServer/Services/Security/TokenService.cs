@@ -52,7 +52,7 @@ public class TokenService
     /// Получает логин (имейл) пользователя из токена
     /// </summary>
     /// <param name="token">JWT-токен</param>
-    /// <returns>имейл пользователя</returns>
+    /// <returns>имейл пользователя или null, если токен некорректен</returns>
     public static string? GetLoginFromToken(string token)
     {
         var handler = new JwtSecurityTokenHandler();

@@ -3,6 +3,9 @@ using EventlyServer.Data.Entities.Enums;
 
 namespace EventlyServer.Data.Entities;
 
+/// <summary>
+/// Сущность приглашения. Содержит в себе информацию о заказе
+/// </summary>
 public partial class LandingInvitation : Entity
 {
     public string? Link { get; set; } = null;
