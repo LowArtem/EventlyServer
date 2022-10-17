@@ -1,4 +1,5 @@
 ﻿using EventlyServer.Data.Entities;
+using EventlyServer.Data.Mappers;
 using Microsoft.EntityFrameworkCore;
 
 namespace EventlyServer.Data;
@@ -68,6 +69,17 @@ public partial class InHolidayContext : DbContext
 
             entity.Property(e => e.StartDate).HasColumnName("start_date");
 
+            entity.Property(e => e.Name)
+                .HasMaxLength(100)
+                .HasColumnName("name");
+
+            entity.Property(e => e.OrderStatus)
+                .HasConversion(
+                    v => v.ToString(), 
+                    v => v.ToOrderStatuses())
+                .HasMaxLength(50)
+                .HasColumnName("status");
+
             entity.HasOne(d => d.Client)
                 .WithMany(p => p.LandingInvitations)
                 .HasForeignKey(d => d.IdClient)
@@ -116,6 +128,14 @@ public partial class InHolidayContext : DbContext
             entity.Property(e => e.Price)
                 .HasColumnType("money")
                 .HasColumnName("price");
+
+            entity.Property(e => e.FilePath)
+                .HasMaxLength(100)
+                .HasColumnName("file_path");
+            
+            entity.Property(e => e.PreviewPath)
+                .HasMaxLength(100)
+                .HasColumnName("preview_path");
 
             entity.HasOne(d => d.ChosenTypeOfEvent)
                 .WithMany(p => p.Templates)
