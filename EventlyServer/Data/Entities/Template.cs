@@ -14,4 +14,11 @@ public partial class Template : Entity
     {
         LandingInvitations = new List<LandingInvitation>();
     }
+
+    public Template(int price, int idTypeOfEvent)
+    {
+        Price = price;
+        IdTypeOfEvent = idTypeOfEvent;
+        LandingInvitations = new List<LandingInvitation>();
+    }
 }

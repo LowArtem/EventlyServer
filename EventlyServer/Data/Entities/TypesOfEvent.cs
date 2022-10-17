@@ -12,4 +12,10 @@ public partial class TypesOfEvent : Entity
     {
         Templates = new List<Template>();
     }
+
+    public TypesOfEvent(string? name)
+    {
+        Name = name;
+        Templates = new List<Template>();
+    }
 }
