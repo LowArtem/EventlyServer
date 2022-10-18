@@ -16,4 +16,11 @@ public partial class Guest : Entity
     {
         Responses = new List<Response>();
     }
+
+    public Guest(string name, string phoneNumber)
+    {
+        Name = name;
+        PhoneNumber = phoneNumber;
+        Responses = new List<Response>();
+    }
 }

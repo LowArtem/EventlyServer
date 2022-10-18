@@ -12,4 +12,23 @@ public partial class Response
 
     public virtual Guest GuestNavigation { get; set; } = null!;
     public virtual LandingInvitation LandingInvitationNavigation { get; set; } = null!;
+
+    public Response()
+    {
+        
+    }
+
+    public Response(DateTime date, int idLandingInvitation, Guest guest)
+    {
+        Date = date;
+        IdLandingInvitation = idLandingInvitation;
+        GuestNavigation = guest;
+    }
+    
+    public Response(DateTime date, int idLandingInvitation, int guestId)
+    {
+        Date = date;
+        IdLandingInvitation = idLandingInvitation;
+        IdGuest = guestId;
+    }
 }
