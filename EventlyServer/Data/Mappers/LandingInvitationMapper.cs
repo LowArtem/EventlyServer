@@ -12,5 +12,9 @@ public static class LandingInvitationMapper
         landingInvitation.OrderStatus, landingInvitation.Link);
 
     public static LandingInvitation ToLandingInvitation(this LandingInvitationCreatingDto dto) => new LandingInvitation(
-    dto.Name, dto.StartDate, dto.FinishDate, dto.Template, dto.OrderStatus, dto.Link);
+        dto.Name, dto.StartDate, dto.FinishDate, dto.IdTemplate, dto.OrderStatus, dto.Link);
+
+    public static LandingInvitation ToLandingInvitation(this LandingInvitationUpdatingDto dto) => new LandingInvitation(
+        dto.Id, dto.Link, dto.Name, dto.OrderStatus, dto.StartDate, dto.FinishDate, dto.IdClient, dto.IdTemplate
+    );
 }

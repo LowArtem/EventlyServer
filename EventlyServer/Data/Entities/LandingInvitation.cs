@@ -27,17 +27,31 @@ public partial class LandingInvitation : Entity
         Responses = new List<Response>();
     }
     
-    public LandingInvitation(string name, DateOnly startDate, DateOnly finishDate, TemplateDto template,
+    public LandingInvitation(string name, DateOnly startDate, DateOnly finishDate, int idTemplate,
         OrderStatuses orderStatus = OrderStatuses.ACCEPTED, string? link = null)
     {
         Name = name;
         StartDate = startDate;
         FinishDate = finishDate;
-        ChosenTemplate = template.ToTemplate();
+        IdTemplate = idTemplate;
         OrderStatus = orderStatus;
         Link = link;
         
         Responses = new List<Response>();
     }
 
+    public LandingInvitation(int id, string? link, string name, OrderStatuses orderStatus, DateOnly startDate, 
+        DateOnly finishDate, int idClient, int idTemplate)
+    {
+        Id = id;
+        Link = link;
+        Name = name;
+        OrderStatus = orderStatus;
+        StartDate = startDate;
+        FinishDate = finishDate;
+        IdClient = idClient;
+        IdTemplate = idTemplate;
+        
+        Responses = new List<Response>();
+    }
 }
