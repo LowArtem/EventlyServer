@@ -17,7 +17,7 @@ public class LandingInvitationService
         _userRepository = userRepository;
     }
 
-    public async Task<List<LandingInvitationDto>> GetInvitationsByUser(string token)
+    public async Task<List<LandingInvitationShortDto>> GetInvitationsByUser(string token)
     {
         string? login = TokenService.GetLoginFromToken(token);
         if (login == null)
@@ -31,7 +31,30 @@ public class LandingInvitationService
             throw new InvalidDataException("User with given email cannot be found");
         }
 
-        return user.LandingInvitations.ConvertAll(i => i.ToDto());
+        return user.LandingInvitations.ConvertAll(i => i.ToShortDto());
+    }
+
+    public async Task<LandingInvitationDto> GetInvitationDetails(string token, int id)
+    {
+        string? login = TokenService.GetLoginFromToken(token);
+        if (login == null)
+        {
+            throw new ArgumentException("Given token is invalid", nameof(token));
+        }
+
+        var user = await _userRepository.Items.FirstOrDefaultAsync(u => u.Email == login);
+        if (user == null)
+        {
+            throw new InvalidDataException("User with given email cannot be found");
+        }
+
+        var invitation = user.LandingInvitations.FirstOrDefault(i => i.Id == id);
+        if (invitation == null)
+        {
+            throw new InvalidDataException("Invitation with given id cannot be found");
+        }
+
+        return invitation.ToDto();
     }
 
     public async Task<List<LandingInvitationDto>> AddInvitation(string token, LandingInvitationCreatingDto dto)
