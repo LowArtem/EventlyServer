@@ -2,51 +2,30 @@
 using EventlyServer.Data.Mappers;
 using EventlyServer.Data.Repositories;
 using EventlyServer.Services.Security;
-using Microsoft.EntityFrameworkCore;
 
 namespace EventlyServer.Services;
 
 public class LandingInvitationService
 {
     private readonly LandingInvitationRepository _landingInvitationRepository;
-    private readonly UserRepository _userRepository;
+    private readonly TokenService _tokenService;
 
-    public LandingInvitationService(LandingInvitationRepository landingInvitationRepository, UserRepository userRepository, TokenService tokenService, UserService userService)
+    public LandingInvitationService(LandingInvitationRepository landingInvitationRepository, TokenService tokenService)
     {
         _landingInvitationRepository = landingInvitationRepository;
-        _userRepository = userRepository;
+        _tokenService = tokenService;
     }
 
     public async Task<List<LandingInvitationShortDto>> GetInvitationsByUser(string token)
     {
-        string? login = TokenService.GetLoginFromToken(token);
-        if (login == null)
-        {
-            throw new ArgumentException("Given token is invalid", nameof(token));
-        }
-
-        var user = await _userRepository.Items.FirstOrDefaultAsync(u => u.Email == login);
-        if (user == null)
-        {
-            throw new InvalidDataException("User with given email cannot be found");
-        }
+        var user = await _tokenService.GetUserOrThrow(token);
 
         return user.LandingInvitations.ConvertAll(i => i.ToShortDto());
     }
-
+    
     public async Task<LandingInvitationDto> GetInvitationDetails(string token, int id)
     {
-        string? login = TokenService.GetLoginFromToken(token);
-        if (login == null)
-        {
-            throw new ArgumentException("Given token is invalid", nameof(token));
-        }
-
-        var user = await _userRepository.Items.FirstOrDefaultAsync(u => u.Email == login);
-        if (user == null)
-        {
-            throw new InvalidDataException("User with given email cannot be found");
-        }
+        var user = await _tokenService.GetUserOrThrow(token);
 
         var invitation = user.LandingInvitations.FirstOrDefault(i => i.Id == id);
         if (invitation == null)
@@ -57,56 +36,24 @@ public class LandingInvitationService
         return invitation.ToDto();
     }
 
-    public async Task<List<LandingInvitationDto>> AddInvitation(string token, LandingInvitationCreatingDto dto)
+    public async Task<List<LandingInvitationShortDto>> AddInvitation(string token, LandingInvitationCreatingDto dto)
     {
-        string? login = TokenService.GetLoginFromToken(token);
-        if (login == null)
-        {
-            throw new ArgumentException("Given token is invalid", nameof(token));
-        }
-
-        var user = await _userRepository.Items.FirstOrDefaultAsync(u => u.Email == login);
-        if (user == null)
-        {
-            throw new InvalidDataException("User with given email cannot be found");
-        }
+        var user = await _tokenService.GetUserOrThrow(token);
 
         await _landingInvitationRepository.AddAsync(dto.ToLandingInvitation());
-        return user.LandingInvitations.ConvertAll(i => i.ToDto());
+        return user.LandingInvitations.ConvertAll(i => i.ToShortDto());
     }
     
-    public async Task<List<LandingInvitationDto>> UpdateInvitation(string token, LandingInvitationUpdatingDto dto)
+    public async Task<List<LandingInvitationShortDto>> UpdateInvitation(string token, LandingInvitationUpdatingDto dto)
     {
-        string? login = TokenService.GetLoginFromToken(token);
-        if (login == null)
-        {
-            throw new ArgumentException("Given token is invalid", nameof(token));
-        }
-
-        var user = await _userRepository.Items.FirstOrDefaultAsync(u => u.Email == login);
-        if (user == null)
-        {
-            throw new InvalidDataException("User with given email cannot be found");
-        }
+        var user = await _tokenService.GetUserOrThrow(token);
 
         await _landingInvitationRepository.UpdateAsync(dto.ToLandingInvitation());
-        return user.LandingInvitations.ConvertAll(i => i.ToDto());
+        return user.LandingInvitations.ConvertAll(i => i.ToShortDto());
     }
 
-    public async Task DeleteInvitation(string token, int id)
+    public async Task DeleteInvitation(int id)
     {
-        string? login = TokenService.GetLoginFromToken(token);
-        if (login == null)
-        {
-            throw new ArgumentException("Given token is invalid", nameof(token));
-        }
-
-        var user = await _userRepository.Items.FirstOrDefaultAsync(u => u.Email == login);
-        if (user == null)
-        {
-            throw new InvalidDataException("User with given email cannot be found");
-        }
-
         await _landingInvitationRepository.RemoveAsync(id);
     }
 }
