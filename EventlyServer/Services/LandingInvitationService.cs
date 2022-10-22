@@ -1,6 +1,7 @@
 ﻿using EventlyServer.Data.Dto;
+using EventlyServer.Data.Entities;
 using EventlyServer.Data.Mappers;
-using EventlyServer.Data.Repositories;
+using EventlyServer.Data.Repositories.Abstracts;
 using EventlyServer.Services.Security;
 
 namespace EventlyServer.Services;
@@ -10,10 +11,10 @@ namespace EventlyServer.Services;
 /// </summary>
 public class LandingInvitationService
 {
-    private readonly LandingInvitationRepository _landingInvitationRepository;
+    private readonly IRepository<LandingInvitation> _landingInvitationRepository;
     private readonly TokenService _tokenService;
 
-    public LandingInvitationService(LandingInvitationRepository landingInvitationRepository, TokenService tokenService)
+    public LandingInvitationService(IRepository<LandingInvitation> landingInvitationRepository, TokenService tokenService)
     {
         _landingInvitationRepository = landingInvitationRepository;
         _tokenService = tokenService;
@@ -56,13 +57,9 @@ public class LandingInvitationService
     /// </summary>
     /// <param name="token">JWT-токен</param>
     /// <param name="invitationInfo">информация о приглашении</param>
-    /// <returns>список сокращенных предствлений приглашений</returns>
-    public async Task<List<LandingInvitationShortDto>> AddInvitation(string token, LandingInvitationCreatingDto invitationInfo)
+    public async Task AddInvitation(string token, LandingInvitationCreatingDto invitationInfo)
     {
-        var user = await _tokenService.GetUserOrThrow(token);
-
         await _landingInvitationRepository.AddAsync(invitationInfo.ToLandingInvitation());
-        return user.LandingInvitations.ConvertAll(i => i.ToShortDto());
     }
     
     /// <summary>
@@ -70,13 +67,9 @@ public class LandingInvitationService
     /// </summary>
     /// <param name="token">JWT-токен</param>
     /// <param name="invitationInfo">обновленная информация о приглашении</param>
-    /// <returns>список сокращенных предствлений приглашений</returns>
-    public async Task<List<LandingInvitationShortDto>> UpdateInvitation(string token, LandingInvitationUpdatingDto invitationInfo)
+    public async Task UpdateInvitation(string token, LandingInvitationUpdatingDto invitationInfo)
     {
-        var user = await _tokenService.GetUserOrThrow(token);
-
         await _landingInvitationRepository.UpdateAsync(invitationInfo.ToLandingInvitation());
-        return user.LandingInvitations.ConvertAll(i => i.ToShortDto());
     }
 
     /// <summary>
@@ -85,6 +78,12 @@ public class LandingInvitationService
     /// <param name="id">id выбранноо приглашения</param>
     public async Task DeleteInvitation(int id)
     {
+        var invitation = await _landingInvitationRepository.GetAsync(id);
+        if (invitation == null)
+        {
+            throw new InvalidDataException("Invitation with given id cannot be found");
+        }
+        
         await _landingInvitationRepository.RemoveAsync(id);
     }
 }
