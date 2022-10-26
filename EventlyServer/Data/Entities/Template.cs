@@ -8,6 +8,7 @@ namespace EventlyServer.Data.Entities;
 public partial class Template : Entity
 {
     public int Price { get; set; }
+    public string Name { get; set; }
     public int IdTypeOfEvent { get; set; }
     public string FilePath { get; set; } = null!;
     public string PreviewPath { get; set; } = null!;
@@ -20,9 +21,21 @@ public partial class Template : Entity
         LandingInvitations = new List<LandingInvitation>();
     }
 
-    public Template(int price, int idTypeOfEvent, string filePath, string previewPath)
+    public Template(int price, string name, int idTypeOfEvent, string filePath, string previewPath)
     {
         Price = price;
+        Name = name;
+        IdTypeOfEvent = idTypeOfEvent;
+        FilePath = filePath;
+        PreviewPath = previewPath;
+        LandingInvitations = new List<LandingInvitation>();
+    }
+    
+    public Template(int id, int price, string name, int idTypeOfEvent, string filePath, string previewPath)
+    {
+        Id = id;
+        Price = price;
+        Name = name;
         IdTypeOfEvent = idTypeOfEvent;
         FilePath = filePath;
         PreviewPath = previewPath;
