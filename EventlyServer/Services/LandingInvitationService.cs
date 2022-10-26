@@ -1,5 +1,6 @@
 ﻿using EventlyServer.Data.Dto;
 using EventlyServer.Data.Entities;
+using EventlyServer.Data.Entities.Enums;
 using EventlyServer.Data.Mappers;
 using EventlyServer.Data.Repositories.Abstracts;
 using EventlyServer.Services.Security;
@@ -55,21 +56,36 @@ public class LandingInvitationService
     /// <summary>
     /// Добавить приглашение
     /// </summary>
-    /// <param name="token">JWT-токен</param>
     /// <param name="invitationInfo">информация о приглашении</param>
-    public async Task AddInvitation(string token, LandingInvitationCreatingDto invitationInfo)
+    public async Task AddInvitation(LandingInvitationCreatingDto invitationInfo)
     {
         await _landingInvitationRepository.AddAsync(invitationInfo.ToLandingInvitation());
     }
-    
+
     /// <summary>
     /// Обновить информацию о приглашении
     /// </summary>
-    /// <param name="token">JWT-токен</param>
     /// <param name="invitationInfo">обновленная информация о приглашении</param>
-    public async Task UpdateInvitation(string token, LandingInvitationUpdatingDto invitationInfo)
+    public async Task UpdateInvitation(LandingInvitationUpdatingDto invitationInfo)
     {
-        await _landingInvitationRepository.UpdateAsync(invitationInfo.ToLandingInvitation());
+        var invitationOld = await _landingInvitationRepository.GetAsync(invitationInfo.Id);
+        if (invitationOld == null)
+        {
+            throw new InvalidDataException("Invitation with given id cannot be found");
+        }
+
+        var invitationNew = new LandingInvitation(
+            id: invitationInfo.Id,
+            link: invitationInfo.Link != "" ? invitationInfo.Link : invitationOld.Link,
+            name: invitationInfo.Name != null ? invitationInfo.Name : invitationOld.Name,
+            orderStatus: invitationInfo.OrderStatus != null ? (OrderStatuses)invitationInfo.OrderStatus : invitationOld.OrderStatus,
+            startDate: invitationInfo.StartDate != null ? (DateOnly)invitationInfo.StartDate : invitationOld.StartDate,
+            finishDate: invitationInfo.FinishDate != null ? (DateOnly)invitationInfo.FinishDate : invitationOld.FinishDate,
+            idClient: invitationInfo.IdClient != null ? (int)invitationInfo.IdClient : invitationOld.IdClient,
+            idTemplate: invitationInfo.IdTemplate != null ? (int)invitationInfo.IdTemplate : invitationOld.IdTemplate
+        );
+        
+        await _landingInvitationRepository.UpdateAsync(invitationNew);
     }
 
     /// <summary>

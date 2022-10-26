@@ -11,5 +11,5 @@ public record LandingInvitationShortDto(int Id, string Name, DateOnly StartDate,
 public record LandingInvitationCreatingDto(string Name, DateOnly StartDate, DateOnly FinishDate, int IdTemplate,
     OrderStatuses OrderStatus = OrderStatuses.ACCEPTED, string? Link = null);
     
-public record LandingInvitationUpdatingDto(int Id, string Name, DateOnly StartDate, DateOnly FinishDate, 
-    int IdTemplate, int IdClient, OrderStatuses OrderStatus = OrderStatuses.ACCEPTED, string? Link = null);
+public record LandingInvitationUpdatingDto(int Id, string? Name = null, DateOnly? StartDate = null, DateOnly? FinishDate = null, 
+    int? IdTemplate = null, int? IdClient = null, OrderStatuses? OrderStatus = null, string? Link = "");

@@ -1,5 +1,6 @@
 ﻿using EventlyServer.Data.Dto;
 using EventlyServer.Data.Entities;
+using EventlyServer.Data.Entities.Enums;
 
 namespace EventlyServer.Data.Mappers;
 
@@ -19,8 +20,4 @@ public static class LandingInvitationMapper
 
     public static LandingInvitation ToLandingInvitation(this LandingInvitationCreatingDto dto) => new LandingInvitation(
         dto.Name, dto.StartDate, dto.FinishDate, dto.IdTemplate, dto.OrderStatus, dto.Link);
-
-    public static LandingInvitation ToLandingInvitation(this LandingInvitationUpdatingDto dto) => new LandingInvitation(
-        dto.Id, dto.Link, dto.Name, dto.OrderStatus, dto.StartDate, dto.FinishDate, dto.IdClient, dto.IdTemplate
-    );
 }
