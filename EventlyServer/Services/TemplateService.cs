@@ -6,12 +6,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EventlyServer.Services;
 
-/* TODO: Исправить шаблон
-    Шаблон представляет собой физический файл на сервере. 
-    Для работы с ним необходимо передавать клиенту и получать от него непосредственно файл.
-    Эту информацию нужно изучить и дописать потом эту логику.
-*/
-
+/// <summary>
+/// Класс для обработки запросов, связанных с шаблонами сайтов-приглашений
+/// </summary>
 public class TemplateService
 {
     private readonly IRepository<Template> _templateRepository;
@@ -21,6 +18,11 @@ public class TemplateService
         _templateRepository = templateRepository;
     }
 
+    /// <summary>
+    /// Добавить новый шаблон
+    /// </summary>
+    /// <param name="template">описание шаблона</param>
+    /// <exception cref="ArgumentException">если шаблон с данным именем уже существует</exception>
     public async Task AddTemplate(TemplateDto template)
     {
         var templateTest = await _templateRepository.Items.SingleOrDefaultAsync(t => t.Name == template.Name);
@@ -32,6 +34,11 @@ public class TemplateService
         await _templateRepository.AddAsync(template.ToTemplate());
     }
 
+    /// <summary>
+    /// Обновить шаблон
+    /// </summary>
+    /// <param name="updated">описание шаблона (обновляются только переданные методы)</param>
+    /// <exception cref="InvalidDataException">если шаблона с переданным id не существует</exception>
     public async Task UpdateTemplate(TemplateUpdateDto updated)
     {
         var templateOld = await _templateRepository.GetAsync(updated.Id);
@@ -41,17 +48,22 @@ public class TemplateService
         }
 
         Template templateNew = new Template(
-            updated.Id,
-            updated.Price != null ? (int)updated.Price : templateOld.Price,
-            updated.Name != null ? updated.Name : templateOld.Name,
-            updated.Event != null ? updated.Event.Id : templateOld.IdTypeOfEvent,
-            updated.FilePath != null ? updated.FilePath : templateOld.FilePath,
-            updated.PreviewPath != null ? updated.PreviewPath : templateOld.PreviewPath
+            id: updated.Id,
+            price: updated.Price != null ? (int)updated.Price : templateOld.Price,
+            name: updated.Name != null ? updated.Name : templateOld.Name,
+            idTypeOfEvent: updated.Event != null ? updated.Event.Id : templateOld.IdTypeOfEvent,
+            filePath: updated.FilePath != null ? updated.FilePath : templateOld.FilePath,
+            previewPath: updated.PreviewPath != null ? updated.PreviewPath : templateOld.PreviewPath
         );
 
         await _templateRepository.UpdateAsync(templateNew);
     }
 
+    /// <summary>
+    /// Удалить шаблон
+    /// </summary>
+    /// <param name="id">id удаляемого шаблона</param>
+    /// <exception cref="InvalidDataException">если шаблона с переданным id не существует</exception>
     public async Task DeleteTemplate(int id)
     {
         var template = await _templateRepository.GetAsync(id);
@@ -63,10 +75,14 @@ public class TemplateService
         await _templateRepository.RemoveAsync(id);
     }
 
-    public async Task<List<TemplateDto>> ShowTemplates()
+    /// <summary>
+    /// Получить информацию обо всех шаблонах
+    /// </summary>
+    /// <remarks>В частности выдает пути к файлам шаблона и превью, которые фронтенд может у себя отобразить</remarks>
+    /// <returns>список информации обо всех существующих шаблонах</returns>
+    public async Task<List<TemplateDto>> GetTemplates()
     {
         var templates = await _templateRepository.GetAllAsync();
-        throw new NotImplementedException();
-        // TODO: нужно разобраться со static files
+        return templates.ConvertAll(t => t.ToDto());
     }
 }
