@@ -8,7 +8,7 @@ namespace EventlyServer.Data.Entities;
 public partial class Template : Entity
 {
     public int Price { get; set; }
-    public string Name { get; set; }
+    public string Name { get; set; } = null!;
     public int IdTypeOfEvent { get; set; }
     public string FilePath { get; set; } = null!;
     public string PreviewPath { get; set; } = null!;

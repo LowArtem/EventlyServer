@@ -8,7 +8,7 @@ public static class LandingInvitationMapper
     public static LandingInvitationDto ToDto(this LandingInvitation landingInvitation) => new LandingInvitationDto(
         landingInvitation.Id,
         landingInvitation.Name, landingInvitation.StartDate, landingInvitation.FinishDate,
-        landingInvitation.ChosenTemplate.ToDto(), landingInvitation.Responses.ConvertAll(r => r.ToDto()),
+        landingInvitation.ChosenTemplate.ToDto(), landingInvitation.Guests.ConvertAll(r => r.ToDto()),
         landingInvitation.OrderStatus, landingInvitation.Link);
 
     public static LandingInvitationShortDto ToShortDto(this LandingInvitation landingInvitation) =>

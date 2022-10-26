@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EventlyServer.Data;
 
-public partial class InHolidayContext : DbContext
+public class InHolidayContext : DbContext
 {
     public InHolidayContext()
     {
@@ -17,7 +17,6 @@ public partial class InHolidayContext : DbContext
 
     public virtual DbSet<Guest> Guests { get; set; } = null!;
     public virtual DbSet<LandingInvitation> LandingInvitations { get; set; } = null!;
-    public virtual DbSet<Response> Responses { get; set; } = null!;
     public virtual DbSet<Template> Templates { get; set; } = null!;
     public virtual DbSet<TypesOfEvent> TypesOfEvents { get; set; } = null!;
     public virtual DbSet<User> Users { get; set; } = null!;
@@ -46,6 +45,13 @@ public partial class InHolidayContext : DbContext
                 .HasMaxLength(11)
                 .HasColumnName("phone_number")
                 .IsFixedLength();
+
+            entity.Property(e => e.IdLandingInvitation).HasColumnName("id_landing_invitation");
+            
+            entity.HasOne(e => e.Invitation)
+                .WithMany(p => p.Guests)
+                .HasForeignKey(d => d.IdLandingInvitation)
+                .HasConstraintName("guests_id_landing_invitation_fkey");
         });
 
         modelBuilder.Entity<LandingInvitation>(entity =>
@@ -91,35 +97,12 @@ public partial class InHolidayContext : DbContext
                 .HasConstraintName("landing_invitations_id_template_fkey");
         });
 
-        modelBuilder.Entity<Response>(entity =>
-        {
-            entity.HasKey(e => new { e.IdGuest, e.IdLandingInvitation })
-                .HasName("responses_pkey");
-
-            entity.ToTable("responses");
-
-            entity.Property(e => e.IdGuest).HasColumnName("id_guest");
-
-            entity.Property(e => e.IdLandingInvitation).HasColumnName("id_landing_invitation");
-
-            entity.Property(e => e.Date).HasColumnName("date");
-
-            entity.HasOne(d => d.GuestNavigation)
-                .WithMany(p => p.Responses)
-                .HasForeignKey(d => d.IdGuest)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("responses_id_guest_fkey");
-
-            entity.HasOne(d => d.LandingInvitationNavigation)
-                .WithMany(p => p.Responses)
-                .HasForeignKey(d => d.IdLandingInvitation)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("responses_id_landing_invitation_fkey");
-        });
-
         modelBuilder.Entity<Template>(entity =>
         {
             entity.ToTable("templates");
+
+            entity.HasIndex(e => e.Name, "templates_name_key")
+                .IsUnique();
 
             entity.Property(e => e.Id).HasColumnName("id");
 
@@ -128,6 +111,10 @@ public partial class InHolidayContext : DbContext
             entity.Property(e => e.Price)
                 .HasColumnType("money")
                 .HasColumnName("price");
+
+            entity.Property(e => e.Name)
+                .HasMaxLength(100)
+                .HasColumnName("name");
 
             entity.Property(e => e.FilePath)
                 .HasMaxLength(100)
@@ -189,9 +176,5 @@ public partial class InHolidayContext : DbContext
                 .HasColumnName("phone_number")
                 .IsFixedLength();
         });
-
-        OnModelCreatingPartial(modelBuilder);
     }
-
-    partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 }

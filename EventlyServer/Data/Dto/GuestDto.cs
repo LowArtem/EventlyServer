@@ -2,4 +2,4 @@
 
 public record GuestDto(int Id, string Name);
 
-public record GuestCreatingDto(string Name, string PhoneNumber);
+public record GuestFullCreatingDto(string Name, string PhoneNumber, int IdInvitation);

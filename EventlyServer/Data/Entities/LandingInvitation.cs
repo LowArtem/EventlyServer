@@ -1,7 +1,5 @@
-using EventlyServer.Data.Dto;
 using EventlyServer.Data.Entities.Abstract;
 using EventlyServer.Data.Entities.Enums;
-using EventlyServer.Data.Mappers;
 
 namespace EventlyServer.Data.Entities;
 
@@ -20,11 +18,11 @@ public partial class LandingInvitation : Entity
 
     public virtual User Client { get; set; } = null!;
     public virtual Template ChosenTemplate { get; set; } = null!;
-    public virtual List<Response> Responses { get; set; }
+    public virtual List<Guest> Guests { get; set; }
 
     public LandingInvitation()
     {
-        Responses = new List<Response>();
+        Guests = new List<Guest>();
     }
     
     public LandingInvitation(string name, DateOnly startDate, DateOnly finishDate, int idTemplate,
@@ -37,7 +35,7 @@ public partial class LandingInvitation : Entity
         OrderStatus = orderStatus;
         Link = link;
         
-        Responses = new List<Response>();
+        Guests = new List<Guest>();
     }
 
     public LandingInvitation(int id, string? link, string name, OrderStatuses orderStatus, DateOnly startDate, 
@@ -52,6 +50,6 @@ public partial class LandingInvitation : Entity
         IdClient = idClient;
         IdTemplate = idTemplate;
         
-        Responses = new List<Response>();
+        Guests = new List<Guest>();
     }
 }

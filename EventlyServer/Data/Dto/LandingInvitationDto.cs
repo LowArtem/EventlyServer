@@ -3,7 +3,7 @@
 namespace EventlyServer.Data.Dto;
 
 public record LandingInvitationDto(int Id, string Name, DateOnly StartDate, DateOnly FinishDate, TemplateDto Template,
-    List<ResponseDto> GuestResponses, OrderStatuses OrderStatus = OrderStatuses.ACCEPTED, string? Link = null);
+    List<GuestDto> Guests, OrderStatuses OrderStatus = OrderStatuses.ACCEPTED, string? Link = null);
 
 // TODO: обсудить со стороны фронтенда
 public record LandingInvitationShortDto(int Id, string Name, DateOnly StartDate, DateOnly FinishDate, OrderStatuses OrderStatus);

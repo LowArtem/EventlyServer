@@ -1,4 +1,5 @@
-﻿using EventlyServer.Data.Dto;
+﻿using System.Data;
+using EventlyServer.Data.Dto;
 using EventlyServer.Data.Entities;
 using EventlyServer.Data.Mappers;
 using EventlyServer.Data.Repositories.Abstracts;
@@ -17,19 +18,22 @@ public class GuestService
         _invitationRepository = invitationRepository;
     }
 
-    public async Task TakeInvitation(GuestCreatingDto guest, int invitationId)
+    public async Task TakeInvitation(GuestFullCreatingDto guest)
     {
-        var guestCreated = await _guestRepository.AddAsync(guest.ToGuest());
-        
-        var invitation = await _invitationRepository.Items.FirstOrDefaultAsync(i => i.Id == invitationId);
+        var invitation = await _invitationRepository.Items.FirstOrDefaultAsync(i => i.Id == guest.IdInvitation);
         if (invitation == null)
         {
             throw new InvalidDataException("Invitation with given id cannot be found");
         }
-        
-        //TODO: где-то тут применяется триггер Макса, уточнить, как именно
-        
-        invitation.Responses.Add(new ResponseCreatingDto(DateTime.UtcNow, guestCreated.Id, invitationId).ToResponse());
-        await _invitationRepository.UpdateAsync(invitation);
+
+        try
+        {
+            await _guestRepository.AddAsync(guest.ToGuest());
+        }
+        catch (DataException e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
     }
 }
