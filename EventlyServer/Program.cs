@@ -6,6 +6,7 @@ using EventlyServer.Services.Security;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.SwaggerUI;
 
 namespace EventlyServer;
 
@@ -99,6 +100,9 @@ public static class Program
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/index.html", "v1");
+                c.DocumentTitle = "inHoliday API";
+                c.DocExpansion(DocExpansion.None);
+                c.RoutePrefix = string.Empty;
             });
         }
 
