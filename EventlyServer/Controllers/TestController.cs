@@ -1,4 +1,6 @@
-﻿using System.Security.Claims;
+﻿using System.Net;
+using System.Security.Authentication;
+using System.Security.Claims;
 using EventlyServer.Data.Dto;
 using EventlyServer.Data.Entities;
 using EventlyServer.Data.Mappers;
@@ -7,6 +9,7 @@ using EventlyServer.Services;
 using EventlyServer.Services.Security;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.Swagger.Annotations;
 
 namespace EventlyServer.Controllers;
 
@@ -50,12 +53,30 @@ public class TestController : ControllerBase
         return await _userRepository.AddAsync(user.ToUser());
     }
     
+    /// <summary>
+    /// Регистрирует нового пользователя
+    /// </summary>
+    /// <param name="user">информация о новом пользователе</param>
+    /// <returns>полностью сформированный класс с информацией о пользователе</returns>
+    /// <response code="200">Возвращает созданного пользователя</response>
+    /// <response code="409">Пользователь с таким email уже существует</response>
     [HttpPost]
     [Route("register")]
-    public async Task<UserDto> Register([FromBody] UserDto user)
+    [Produces("application/json")]
+    [ProducesResponseType(typeof(UserDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status409Conflict)]
+    public async Task<ActionResult<UserDto>> Register([FromBody] UserDto user)
     {
-        string token =  await _userService.Register(user);
-        return await _userService.GetUserByEmail(TokenService.GetLoginFromToken(token));
+        try
+        {
+            string token =  await _userService.Register(user);
+            var created = await _userService.GetUserByEmail(TokenService.GetLoginFromToken(token));
+            return created;
+        }
+        catch (AuthenticationException e)
+        {
+            return Conflict(e.Message);
+        }
     }
     
     [HttpPost]
