@@ -1,5 +1,4 @@
-﻿using System.Net;
-using System.Security.Authentication;
+﻿using System.Security.Authentication;
 using System.Security.Claims;
 using EventlyServer.Data.Dto;
 using EventlyServer.Data.Entities;
@@ -9,7 +8,6 @@ using EventlyServer.Services;
 using EventlyServer.Services.Security;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Swashbuckle.Swagger.Annotations;
 
 namespace EventlyServer.Controllers;
 
@@ -65,13 +63,13 @@ public class TestController : ControllerBase
     [Produces("application/json")]
     [ProducesResponseType(typeof(UserDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status409Conflict)]
-    public async Task<ActionResult<UserDto>> Register([FromBody] UserDto user)
+    public async Task<ActionResult<UserDto>> Register([FromBody] UserRegisterDto user)
     {
         try
         {
             string token =  await _userService.Register(user);
             var created = await _userService.GetUserByEmail(TokenService.GetLoginFromToken(token));
-            return created;
+            return created.ToDto();
         }
         catch (AuthenticationException e)
         {
@@ -81,8 +79,8 @@ public class TestController : ControllerBase
     
     [HttpPost]
     [Route("login")]
-    public async Task<string> Login([FromBody] UserAuthDto userAuthDto)
+    public async Task<string> Login([FromBody] UserLoginDto userLoginDto)
     {
-        return await _userService.Login(userAuthDto.Email, userAuthDto.Password);
+        return await _userService.Login(userLoginDto.Email, userLoginDto.Password);
     }
 }

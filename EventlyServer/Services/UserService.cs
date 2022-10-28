@@ -41,7 +41,7 @@ public class UserService
     /// <param name="user">информация о новом пользователе</param>
     /// <returns>JWT-токен для данного пользователя</returns>
     /// <exception cref="AuthenticationException">если пользователь с таким имейлом уже существует</exception>
-    public async Task<string> Register(UserDto user)
+    public async Task<string> Register(UserRegisterDto user)
     {
         var testUser = await _userRepository.Items.FirstOrDefaultAsync(item => item.Email == user.Email);
         if (testUser != null)
@@ -59,10 +59,10 @@ public class UserService
     /// <param name="email">имейл пользователя</param>
     /// <returns>информацию о данном пользователе</returns>
     /// <exception cref="ArgumentException">если пользователь с таким email не существует</exception>
-    public async Task<UserDto> GetUserByEmail(string email)
+    public async Task<User> GetUserByEmail(string email)
     {
         var user = await _userRepository.Items.FirstOrDefaultAsync(item => item.Email == email);
-        return user?.ToDto() ?? throw new ArgumentException("User with this id cannot be found");
+        return user ?? throw new ArgumentException("User with this id cannot be found");
     }
 
     /// <summary>
