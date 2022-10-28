@@ -45,4 +45,20 @@ public class GuestService
             throw;
         }
     }
+
+    /// <summary>
+    /// Удалить выбранного гостя
+    /// </summary>
+    /// <param name="guestId">ID удаляемого гостя</param>
+    /// <exception cref="InvalidDataException">если гость с переданным id не существует</exception>
+    public async Task DeleteGuest(int guestId)
+    {
+        var guest = await _guestRepository.GetAsync(guestId);
+        if (guest == null)
+        {
+            throw new InvalidDataException("Guest with given id cannot be found");
+        }
+        
+        await _guestRepository.RemoveAsync(guestId);
+    }
 }
