@@ -96,6 +96,7 @@ public static class Program
         }
         else
         {
+            app.UseDeveloperExceptionPage();
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
