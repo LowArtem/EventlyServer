@@ -21,8 +21,22 @@ public partial class User : Entity
         LandingInvitations = new List<LandingInvitation>();
     }
 
-    public User(string name, string email, string password, string? phoneNumber, string? otherCommunication = null, bool isAdmin = false)
+    public User(string name, string email, string password, string? phoneNumber, string? otherCommunication = null,
+        bool isAdmin = false)
     {
+        Name = name;
+        Email = email;
+        Password = password;
+        PhoneNumber = phoneNumber;
+        OtherCommunication = otherCommunication;
+        IsAdmin = isAdmin;
+        
+        LandingInvitations = new List<LandingInvitation>();
+    }
+
+    public User(int id, string name, string email, string password, string? phoneNumber, string? otherCommunication = null, bool isAdmin = false)
+    {
+        Id = id;
         Name = name;
         Email = email;
         Password = password;
