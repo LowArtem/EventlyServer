@@ -22,7 +22,7 @@ public static class Program
             .AddJwtBearer(options =>
             {
                 options.SaveToken = true;
-                
+
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
                     ValidateIssuer = true,
@@ -34,7 +34,7 @@ public static class Program
                     ValidateIssuerSigningKey = true,
                 };
             });
-        
+
         builder.Services.AddDbContext<InHolidayContext>();
         builder.Services.AddRepositories();
         builder.Services.AddServices();
@@ -51,9 +51,9 @@ public static class Program
                 Title = "inHoliday API",
                 Description = "An ASP.NET Core Web API for digital invitation app"
             });
-            
+
             options.SupportNonNullableReferenceTypes();
-            
+
             options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
             {
                 Description = "JWT Authorization header using the Bearer scheme. \r\n\r\n Enter 'Bearer' [space] and then your token in the text input below.\r\n\r\nExample: \"Bearer 12345abcdef\"",
@@ -62,7 +62,7 @@ public static class Program
                 Type = SecuritySchemeType.ApiKey,
                 Scheme = "Bearer"
             });
-            
+
             options.AddSecurityRequirement(new OpenApiSecurityRequirement()
             {
                 {
@@ -80,7 +80,7 @@ public static class Program
                     new List<string>()
                 }
             });
-            
+
             var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
             options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
         });
@@ -92,6 +92,14 @@ public static class Program
         {
             app.UseSwagger();
             app.UseSwaggerUI();
+        }
+        else
+        {
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/index.html", "v1");
+            });
         }
 
         app.UseHttpsRedirection();
