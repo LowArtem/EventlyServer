@@ -100,7 +100,7 @@ public static class Program
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/index.html", "v1");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
                 c.DocumentTitle = "inHoliday API";
                 c.DocExpansion(DocExpansion.None);
                 c.RoutePrefix = string.Empty;
