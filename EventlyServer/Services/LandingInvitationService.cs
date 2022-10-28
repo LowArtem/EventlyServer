@@ -1,6 +1,5 @@
 ﻿using EventlyServer.Data.Dto;
 using EventlyServer.Data.Entities;
-using EventlyServer.Data.Entities.Enums;
 using EventlyServer.Data.Mappers;
 using EventlyServer.Data.Repositories.Abstracts;
 using EventlyServer.Services.Security;
@@ -77,12 +76,12 @@ public class LandingInvitationService
         var invitationNew = new LandingInvitation(
             id: invitationInfo.Id,
             link: invitationInfo.Link != "" ? invitationInfo.Link : invitationOld.Link,
-            name: invitationInfo.Name != null ? invitationInfo.Name : invitationOld.Name,
-            orderStatus: invitationInfo.OrderStatus != null ? (OrderStatuses)invitationInfo.OrderStatus : invitationOld.OrderStatus,
-            startDate: invitationInfo.StartDate != null ? (DateOnly)invitationInfo.StartDate : invitationOld.StartDate,
-            finishDate: invitationInfo.FinishDate != null ? (DateOnly)invitationInfo.FinishDate : invitationOld.FinishDate,
-            idClient: invitationInfo.IdClient != null ? (int)invitationInfo.IdClient : invitationOld.IdClient,
-            idTemplate: invitationInfo.IdTemplate != null ? (int)invitationInfo.IdTemplate : invitationOld.IdTemplate
+            name: invitationInfo.Name ?? invitationOld.Name,
+            orderStatus: invitationInfo.OrderStatus ?? invitationOld.OrderStatus,
+            startDate: invitationInfo.StartDate ?? invitationOld.StartDate,
+            finishDate: invitationInfo.FinishDate ?? invitationOld.FinishDate,
+            idClient: invitationInfo.IdClient ?? invitationOld.IdClient,
+            idTemplate: invitationInfo.IdTemplate ?? invitationOld.IdTemplate
         );
         
         await _landingInvitationRepository.UpdateAsync(invitationNew);

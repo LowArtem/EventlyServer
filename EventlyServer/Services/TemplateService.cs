@@ -49,11 +49,11 @@ public class TemplateService
 
         Template templateNew = new Template(
             id: updated.Id,
-            price: updated.Price != null ? (int)updated.Price : templateOld.Price,
-            name: updated.Name != null ? updated.Name : templateOld.Name,
-            idTypeOfEvent: updated.Event != null ? updated.Event.Id : templateOld.IdTypeOfEvent,
-            filePath: updated.FilePath != null ? updated.FilePath : templateOld.FilePath,
-            previewPath: updated.PreviewPath != null ? updated.PreviewPath : templateOld.PreviewPath
+            price: updated.Price ?? templateOld.Price,
+            name: updated.Name ?? templateOld.Name,
+            idTypeOfEvent: updated.Event?.Id ?? templateOld.IdTypeOfEvent,
+            filePath: updated.FilePath ?? templateOld.FilePath,
+            previewPath: updated.PreviewPath ?? templateOld.PreviewPath
         );
 
         await _templateRepository.UpdateAsync(templateNew);
