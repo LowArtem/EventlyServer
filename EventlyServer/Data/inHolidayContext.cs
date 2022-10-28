@@ -25,7 +25,28 @@ public class InHolidayContext : DbContext
     {
         if (!optionsBuilder.IsConfigured)
         {
-            optionsBuilder.UseNpgsql("Host=localhost;Database=inHoliday;Username=postgres;Password=root");
+            // Heroku
+            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+            
+            string connUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
+
+            connUrl = connUrl.Replace("postgres://", string.Empty);
+
+            string pgHostPortDb = connUrl.Split("@")[1];
+            string pgUserPass = connUrl.Split("@")[0];
+            string pgHostPort = pgHostPortDb.Split("/")[0];
+
+            string pgDb = pgHostPortDb.Split("/")[1];
+            string pgUser = pgUserPass.Split(":")[0];
+            string pgPass = pgUserPass.Split(":")[1];
+            string pgHost = pgHostPort.Split(":")[0];
+            string pgPort = pgHostPort.Split(":")[1];
+
+            string connStr = $"Server={pgHost};Port={pgPort};User Id={pgUser};Password={pgPass};Database={pgDb};SSL Mode=Require;Trust Server Certificate=True;";
+            optionsBuilder.UseNpgsql(connStr);
+            
+            // Localhost
+            // optionsBuilder.UseNpgsql("Host=localhost;Database=inHoliday;Username=postgres;Password=root");
         }
     }
 
