@@ -43,7 +43,20 @@ public record UserUpdateDto([Required] int Id, string? Name = null, string? Pass
 /// </summary>
 /// <param name="Email">Электронная почта</param>
 /// <param name="Password">Пароль</param>
-public record UserLoginDto([Required] string Email, [Required] string Password);
+public record UserLoginDto
+{
+    /// <summary>
+    /// Электронная почта!
+    /// </summary>
+    [Required]
+    public string Email { get; set; }
+    
+    /// <summary>
+    /// Пароль!
+    /// </summary>
+    [Required]
+    public string Password { get; set; }
+}
 
 /// <summary>
 /// Пользовательский аккаунт (информация для регистрации)
