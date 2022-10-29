@@ -8,7 +8,7 @@ public record LandingInvitationDto(int Id, string Name, DateOnly StartDate, Date
 // TODO: обсудить со стороны фронтенда
 public record LandingInvitationShortDto(int Id, string Name, DateOnly StartDate, DateOnly FinishDate, OrderStatuses OrderStatus);
     
-public record LandingInvitationCreatingDto(string Name, DateOnly StartDate, DateOnly FinishDate, int IdTemplate,
+public record LandingInvitationCreatingDto(string Name, DateOnly StartDate, DateOnly FinishDate, int IdTemplate, int IdClient,
     OrderStatuses OrderStatus = OrderStatuses.ACCEPTED, string? Link = null);
     
 public record LandingInvitationUpdatingDto(int Id, string? Name = null, DateOnly? StartDate = null, DateOnly? FinishDate = null, 

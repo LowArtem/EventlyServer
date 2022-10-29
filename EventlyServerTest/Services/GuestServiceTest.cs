@@ -1,9 +1,9 @@
-﻿using System.Data;
-using EventlyServer.Data.Dto;
+﻿using EventlyServer.Data.Dto;
 using EventlyServer.Data.Entities;
 using EventlyServer.Data.Mappers;
 using EventlyServer.Data.Repositories.Abstracts;
 using EventlyServer.Services;
+using Microsoft.EntityFrameworkCore;
 
 namespace EventlyServerTest.Services;
 
@@ -24,9 +24,11 @@ public class GuestServiceTest : IDisposable
 
     private void Setup()
     {
-        var invitation = new LandingInvitationCreatingDto("Invitation",
-            DateOnly.FromDateTime(DateTime.Today), DateOnly.FromDateTime(DateTime.Today).AddDays(7), 1);
-        
+        var invitation = new LandingInvitationCreatingDto(
+            "Invitation",
+            DateOnly.FromDateTime(DateTime.Today),
+            DateOnly.FromDateTime(DateTime.Today).AddDays(7), 1, 1
+        );
         _invitationRepository.Add(invitation.ToLandingInvitation());
     }
 
@@ -66,7 +68,8 @@ public class GuestServiceTest : IDisposable
         var idInvitation = _invitationRepository.Items.SingleOrDefault()!.Id;
         
         GuestFullCreatingDto guestCreatingDto = new GuestFullCreatingDto("Akakiy Sidorov", "11111111111", idInvitation);
+        await _guestService.TakeInvitation(guestCreatingDto);
 
-        await Assert.ThrowsAsync<DataException>(() => _guestService.TakeInvitation(guestCreatingDto));
+        await Assert.ThrowsAsync<DbUpdateException>(() => _guestService.TakeInvitation(guestCreatingDto));
     }
 }

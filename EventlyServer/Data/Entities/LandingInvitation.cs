@@ -25,13 +25,14 @@ public partial class LandingInvitation : Entity
         Guests = new List<Guest>();
     }
     
-    public LandingInvitation(string name, DateOnly startDate, DateOnly finishDate, int idTemplate,
+    public LandingInvitation(string name, DateOnly startDate, DateOnly finishDate, int idTemplate, int idClient,
         OrderStatuses orderStatus = OrderStatuses.ACCEPTED, string? link = null)
     {
         Name = name;
         StartDate = startDate;
         FinishDate = finishDate;
         IdTemplate = idTemplate;
+        IdClient = idClient;
         OrderStatus = orderStatus;
         Link = link;
         

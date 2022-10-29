@@ -1,5 +1,4 @@
-﻿using System.Data;
-using EventlyServer.Data.Dto;
+﻿using EventlyServer.Data.Dto;
 using EventlyServer.Data.Entities;
 using EventlyServer.Data.Mappers;
 using EventlyServer.Data.Repositories.Abstracts;
@@ -26,24 +25,16 @@ public class GuestService
     /// </summary>
     /// <param name="guest">информаци о госте</param>
     /// <exception cref="InvalidDataException">если мероприятия с переданным id не существует</exception>
-    /// <exception cref="DataException">если гость с таким номером телефона уже зарегистрировался на мероприятие</exception>
+    /// <exception cref="DbUpdateException">если гость с таким номером телефона уже зарегистрировался на мероприятие</exception>
     public async Task TakeInvitation(GuestFullCreatingDto guest)
     {
         var invitation = await _invitationRepository.Items.FirstOrDefaultAsync(i => i.Id == guest.IdInvitation);
         if (invitation == null)
         {
             throw new InvalidDataException("Invitation with given id cannot be found");
-        }
-
-        try
-        {
-            await _guestRepository.AddAsync(guest.ToGuest());
-        }
-        catch (DataException e)
-        {
-            Console.WriteLine(e);
-            throw;
-        }
+        } 
+        
+        await _guestRepository.AddAsync(guest.ToGuest());
     }
 
     /// <summary>
