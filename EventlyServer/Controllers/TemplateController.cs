@@ -84,6 +84,7 @@ public class TemplateController : ControllerBase
     /// <response code="409">Шаблон с таким именем уже существует</response>
     /// <response code="500">Неизвестная ошибка сервера (вероятнее БД)</response>
     /// <response code="401">Ошибка авторизации</response>
+    /// <response code="403">Нет доступа</response>
     [HttpPost]
     [Route("")]
     [Authorize(Roles = nameof(UserRoles.ADMIN))]
@@ -120,6 +121,7 @@ public class TemplateController : ControllerBase
     /// <response code="404">Шаблон с таким ID не существует</response>
     /// <response code="500">Неизвестная ошибка сервера (вероятнее БД)</response>
     /// <response code="401">Ошибка авторизации</response>
+    /// <response code="403">Нет доступа</response>
     [HttpDelete]
     [Route("{id:int}")]
     [Authorize(Roles = nameof(UserRoles.ADMIN))]
