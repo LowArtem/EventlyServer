@@ -44,6 +44,35 @@ public class TemplateController : ControllerBase
     }
 
     /// <summary>
+    /// Получить информацию о конкретном шаблоне
+    /// </summary>
+    /// <param name="id">ID выбранного шаблона</param>
+    /// <returns>Подробная информация о выбранном шаблоне</returns>
+    /// <response code="200">Подробная информация о выбранном шаблоне</response>
+    /// <response code="404">Шаблон с таким ID не существует</response>
+    /// <response code="500">Неизвестная ошибка сервера (вероятнее БД)</response>
+    [HttpGet]
+    [Route("{id:int}")]
+    [ProducesResponseType(typeof(TemplateDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult<TemplateDto>> GetTemplateDetails([FromRoute] int id)
+    {
+        try
+        {
+            return await _templateService.GetTemplateDetails(id);
+        }
+        catch (InvalidDataException e)
+        {
+            return StatusCode(StatusCodes.Status404NotFound, e.Message);
+        }
+        catch (Exception e)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+        }
+    }
+
+    /// <summary>
     /// Добавить новый шаблон в базу
     /// </summary>
     /// <param name="template">Описание нового шаблона</param>

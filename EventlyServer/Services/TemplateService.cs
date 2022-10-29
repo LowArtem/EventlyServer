@@ -85,4 +85,21 @@ public class TemplateService
         var templates = await _templateRepository.GetAllAsync();
         return templates.ConvertAll(t => t.ToDto());
     }
+
+    /// <summary>
+    /// Получить информацию о данном шаблоне
+    /// </summary>
+    /// <param name="id">ID выбранного шаблона</param>
+    /// <returns>информация о выбранном шаблоне</returns>
+    /// <exception cref="InvalidDataException">если шаблона с переданным id не существует</exception>
+    public async Task<TemplateDto> GetTemplateDetails(int id)
+    {
+        var template = await _templateRepository.GetAsync(id);
+        if (template == null)
+        {
+            throw new InvalidDataException("Template with given id cannot be found");
+        }
+
+        return template.ToDto();
+    }
 }
