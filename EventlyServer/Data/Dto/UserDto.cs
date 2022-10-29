@@ -5,67 +5,209 @@ namespace EventlyServer.Data.Dto;
 /// <summary>
 /// Пользовательский аккаунт
 /// </summary>
-/// <param name="Id">ID пользователя</param>
-/// <param name="Name">Имя пользователя</param>
-/// <param name="Email">Электронная почта</param>
-/// <param name="Password">Пароль</param>
-/// <param name="PhoneNumber">Номер телефона</param>
-/// <param name="OtherCommunication">Иные контакты (ссылки на соцсети, например)</param>
-/// <param name="IsAdmin">Является ли пользователь администратором</param>
-public record UserDto([Required] int Id, [Required] string Name, [Required] string Email, [Required] string Password,
-    string? PhoneNumber,
-    string? OtherCommunication = null, bool IsAdmin = false);
+public record UserDto
+{
+    /// <summary>
+    /// Пользовательский аккаунт
+    /// </summary>
+    /// <param name="id">ID пользователя</param>
+    /// <param name="name">Имя пользователя</param>
+    /// <param name="email">Электронная почта</param>
+    /// <param name="password">Пароль</param>
+    /// <param name="phoneNumber">Номер телефона</param>
+    /// <param name="otherCommunication">Иные контакты (ссылки на соцсети, например)</param>
+    /// <param name="isAdmin">Является ли пользователь администратором</param>
+    public UserDto([Required] int id, [Required] string name, [Required] string email, [Required] string password,
+        string? phoneNumber, string? otherCommunication = null, bool isAdmin = false)
+    {
+        Id = id;
+        Name = name;
+        Email = email;
+        Password = password;
+        PhoneNumber = phoneNumber;
+        OtherCommunication = otherCommunication;
+        IsAdmin = isAdmin;
+    }
+
+    /// <summary>ID пользователя</summary>
+    [Required]
+    public int Id { get; init; }
+
+    /// <summary>Имя пользователя</summary>
+    [Required]
+    public string Name { get; init; }
+
+    /// <summary>Электронная почта</summary>
+    [Required]
+    public string Email { get; init; }
+
+    /// <summary>Пароль</summary>
+    [Required]
+    public string Password { get; init; }
+
+    /// <summary>Номер телефона</summary>
+    public string? PhoneNumber { get; init; }
+
+    /// <summary>Иные контакты (ссылки на соцсети, например)</summary>
+    public string? OtherCommunication { get; init; }
+
+    /// <summary>Является ли пользователь администратором</summary>
+    public bool IsAdmin { get; init; }
+}
 
 /// <summary>
 /// Пользовательский аккаунт (базовая информация)
 /// </summary>
-/// <param name="Id">ID пользователя</param>
-/// <param name="Name">Имя пользователя</param>
-/// <param name="Email">Электронная почта</param>
-/// <param name="Token">JWT-токен аутентификации</param>
-/// <param name="IsAdmin">Является ли пользователь администратором</param>
-public record UserShortDto([Required] int Id, [Required] string Name, [Required] string Email, [Required] string Token,
-    [Required] bool IsAdmin);
+public record UserShortDto
+{
+    /// <summary>
+    /// Пользовательский аккаунт (базовая информация)
+    /// </summary>
+    /// <param name="id">ID пользователя</param>
+    /// <param name="name">Имя пользователя</param>
+    /// <param name="email">Электронная почта</param>
+    /// <param name="token">JWT-токен аутентификации</param>
+    /// <param name="isAdmin">Является ли пользователь администратором</param>
+    public UserShortDto([Required] int id, [Required] string name, [Required] string email, [Required] string token,
+        [Required] bool isAdmin)
+    {
+        Id = id;
+        Name = name;
+        Email = email;
+        Token = token;
+        IsAdmin = isAdmin;
+    }
+
+    /// <summary>ID пользователя</summary>
+    [Required]
+    public int Id { get; init; }
+
+    /// <summary>Имя пользователя</summary>
+    [Required]
+    public string Name { get; init; }
+
+    /// <summary>Электронная почта</summary>
+    [Required]
+    public string Email { get; init; }
+
+    /// <summary>JWT-токен аутентификации</summary>
+    [Required]
+    public string Token { get; init; }
+
+    /// <summary>Является ли пользователь администратором</summary>
+    [Required]
+    public bool IsAdmin { get; init; }
+}
 
 /// <summary>
 /// Пользовательский аккаунт (информация для обновления)
 /// </summary>
-/// <param name="Id">ID пользователя</param>
-/// <param name="Name">Имя пользователя</param>
-/// <param name="Password">Пароль</param>
-/// <param name="PhoneNumber">Номер телефона</param>
-/// <param name="OtherCommunication">Иные контакты (ссылки на соцсети, например)</param>
-public record UserUpdateDto([Required] int Id, string? Name = null, string? Password = null, string? PhoneNumber = null,
-    string? OtherCommunication = "");
+/// <remarks>
+/// Все поля, кроме ID, необязательны для заполнения - их нужно заполнять, если нужно обновить значение.
+///<para></para>
+/// Если нужно оставить значение без изменения - передать null (исключение: поле OtherCommunication - оставить
+/// без изменений - передать пустую строку)
+/// </remarks>
+public record UserUpdateDto
+{
+    /// <summary>
+    /// Пользовательский аккаунт (информация для обновления)
+    /// </summary>
+    /// <param name="id">ID пользователя</param>
+    /// <param name="name">Имя пользователя</param>
+    /// <param name="password">Пароль</param>
+    /// <param name="phoneNumber">Номер телефона</param>
+    /// <param name="otherCommunication">Иные контакты (ссылки на соцсети, например)</param>
+    public UserUpdateDto([Required] int id, string? name = null, string? password = null, string? phoneNumber = null,
+        string? otherCommunication = "")
+    {
+        Id = id;
+        Name = name;
+        Password = password;
+        PhoneNumber = phoneNumber;
+        OtherCommunication = otherCommunication;
+    }
+
+    /// <summary>ID пользователя</summary>
+    [Required]
+    public int Id { get; init; }
+
+    /// <summary>Имя пользователя</summary>
+    public string? Name { get; init; }
+
+    /// <summary>Пароль</summary>
+    public string? Password { get; init; }
+
+    /// <summary>Номер телефона</summary>
+    public string? PhoneNumber { get; init; }
+
+    /// <summary>Иные контакты (ссылки на соцсети, например)</summary>
+    public string? OtherCommunication { get; init; }
+}
 
 /// <summary>
 /// Пользовательский аккаунт (информация для логина)
 /// </summary>
-/// <param name="Email">Электронная почта</param>
-/// <param name="Password">Пароль</param>
 public record UserLoginDto
 {
     /// <summary>
-    /// Электронная почта!
+    /// Пользовательский аккаунт (информация для логина)
     /// </summary>
-    [Required]
-    public string Email { get; set; }
+    /// <param name="email">Электронная почта</param>
+    /// <param name="password">Пароль</param>
+    public UserLoginDto([Required] string email, [Required] string password)
+    {
+        Email = email;
+        Password = password;
+    }
     
-    /// <summary>
-    /// Пароль!
-    /// </summary>
+    /// <summary>Электронная почта</summary>
     [Required]
-    public string Password { get; set; }
+    public string Email { get; init; }
+    
+    /// <summary>Пароль</summary>
+    [Required]
+    public string Password { get; init; }
 }
 
 /// <summary>
 /// Пользовательский аккаунт (информация для регистрации)
 /// </summary>
-/// <param name="Name">Имя пользователя</param>
-/// <param name="Email">Электронная почта</param>
-/// <param name="Password">Пароль</param>
-/// <param name="PhoneNumber">Номер телефона</param>
-/// <param name="OtherCommunication">Иные контакты (ссылки на соцсети, например)</param>
-public record UserRegisterDto([Required] string Name, [Required] string Email, [Required] string Password,
-    string? PhoneNumber,
-    string? OtherCommunication);
+public record UserRegisterDto
+{
+    /// <summary>
+    /// Пользовательский аккаунт (информация для регистрации)
+    /// </summary>
+    /// <param name="name">Имя пользователя</param>
+    /// <param name="email">Электронная почта</param>
+    /// <param name="password">Пароль</param>
+    /// <param name="phoneNumber">Номер телефона</param>
+    /// <param name="otherCommunication">Иные контакты (ссылки на соцсети, например)</param>
+    public UserRegisterDto([Required] string name, [Required] string email, [Required] string password,
+        string? phoneNumber, string? otherCommunication)
+    {
+        Name = name;
+        Email = email;
+        Password = password;
+        PhoneNumber = phoneNumber;
+        OtherCommunication = otherCommunication;
+    }
+
+    /// <summary>Имя пользователя</summary>
+    [Required]
+    public string Name { get; init; }
+
+    /// <summary>Электронная почта</summary>
+    [Required]
+    public string Email { get; init; }
+
+    /// <summary>Пароль</summary>
+    [Required]
+    public string Password { get; init; }
+
+    /// <summary>Номер телефона</summary>
+    public string? PhoneNumber { get; init; }
+
+    /// <summary>Иные контакты (ссылки на соцсети, например)</summary>
+    public string? OtherCommunication { get; init; }
+}
