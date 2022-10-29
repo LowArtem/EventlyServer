@@ -53,6 +53,7 @@ public static class Program
                 Description = "An ASP.NET Core Web API for digital invitation app"
             });
 
+            options.EnableAnnotations();
             options.SupportNonNullableReferenceTypes();
 
             options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
@@ -98,20 +99,13 @@ public static class Program
         {
             app.UseDeveloperExceptionPage();
             app.UseSwagger();
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
-                c.DocumentTitle = "inHoliday API";
-                c.DocExpansion(DocExpansion.None);
-                c.RoutePrefix = string.Empty;
-            });
+            app.UseSwaggerUI();
         }
 
         app.UseHttpsRedirection();
 
         app.UseAuthentication();
         app.UseAuthorization();
-
 
         app.MapControllers();
 
