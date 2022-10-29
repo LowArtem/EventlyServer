@@ -23,7 +23,7 @@ public class TemplateService
     /// </summary>
     /// <param name="template">описание шаблона</param>
     /// <exception cref="ArgumentException">если шаблон с данным именем уже существует</exception>
-    public async Task AddTemplate(TemplateDto template)
+    public async Task AddTemplate(TemplateCreatingDto template)
     {
         var templateTest = await _templateRepository.Items.SingleOrDefaultAsync(t => t.Name == template.Name);
         if (templateTest != null)
