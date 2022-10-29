@@ -12,38 +12,57 @@ namespace EventlyServer.Services;
 public class LandingInvitationService
 {
     private readonly IRepository<LandingInvitation> _landingInvitationRepository;
+    private readonly IRepository<User> _userRepository;
     private readonly TokenService _tokenService;
 
-    public LandingInvitationService(IRepository<LandingInvitation> landingInvitationRepository, TokenService tokenService)
+    public LandingInvitationService(IRepository<LandingInvitation> landingInvitationRepository, TokenService tokenService, IRepository<User> userRepository)
     {
         _landingInvitationRepository = landingInvitationRepository;
         _tokenService = tokenService;
+        _userRepository = userRepository;
     }
 
     /// <summary>
     /// Получить список приглашений пользователя
     /// </summary>
-    /// <param name="token">JWT-токен</param>
+    /// <param name="login">Логин пользователя (email)</param>
     /// <returns>список сокращенных предствлений приглашений</returns>
-    public async Task<List<LandingInvitationShortDto>> GetInvitationsByUser(string token)
+    /// <exception cref="InvalidDataException">если пользователь с такими входными данными не существует</exception>
+    public async Task<List<LandingInvitationShortDto>> GetInvitationsByUser(string login)
     {
-        var user = await _tokenService.GetUserOrThrow(token);
+        var user = await _tokenService.GetUserFromLoginOrThrow(login);
 
         return user.LandingInvitations.ConvertAll(i => i.ToShortDto());
     }
     
     /// <summary>
+    /// Получить список приглашений пользователя по его ID (для админов)
+    /// </summary>
+    /// <param name="id">ID пользователя</param>
+    /// <returns>список сокращенных предствлений приглашений</returns>
+    /// <exception cref="InvalidDataException">если пользователь с таким ID не существует</exception>
+    public async Task<List<LandingInvitationShortDto>> GetInvitationsByUserId(int id)
+    {
+        var user = await _userRepository.GetAsync(id);
+        if (user == null)
+        {
+            throw new InvalidDataException("User with given id cannot be found");
+        }
+        
+        return user.LandingInvitations.ConvertAll(i => i.ToShortDto());
+    }
+
+    /// <summary>
     /// Получить полную информацию о выбранном приглашении
     /// </summary>
-    /// <param name="token">JWT-токен</param>
+    /// <param name="login">Логин пользователя (email)</param>
     /// <param name="id">id выбранного приглашения</param>
     /// <returns>полная информация о приглашении</returns>
     /// <exception cref="InvalidDataException">если приглашения с данным id не существует</exception>
-    public async Task<LandingInvitationDto> GetInvitationDetails(string token, int id)
+    /// <exception cref="InvalidDataException">если пользователь с такими входными данными не существует</exception>
+    public async Task<LandingInvitationDto> GetInvitationDetails(int id)
     {
-        var user = await _tokenService.GetUserOrThrow(token);
-
-        var invitation = user.LandingInvitations.FirstOrDefault(i => i.Id == id);
+        var invitation = await _landingInvitationRepository.GetAsync(id);
         if (invitation == null)
         {
             throw new InvalidDataException("Invitation with given id cannot be found");
@@ -65,6 +84,7 @@ public class LandingInvitationService
     /// Обновить информацию о приглашении
     /// </summary>
     /// <param name="invitationInfo">обновленная информация о приглашении</param>
+    /// <exception cref="InvalidDataException">если приглашения с переданным ID не существует</exception>
     public async Task UpdateInvitation(LandingInvitationUpdatingDto invitationInfo)
     {
         var invitationOld = await _landingInvitationRepository.GetAsync(invitationInfo.Id);
@@ -78,9 +98,9 @@ public class LandingInvitationService
             link: invitationInfo.Link != "" ? invitationInfo.Link : invitationOld.Link,
             name: invitationInfo.Name ?? invitationOld.Name,
             orderStatus: invitationInfo.OrderStatus ?? invitationOld.OrderStatus,
-            startDate: invitationInfo.StartDate ?? invitationOld.StartDate,
-            finishDate: invitationInfo.FinishDate ?? invitationOld.FinishDate,
-            idClient: invitationInfo.IdClient ?? invitationOld.IdClient,
+            startDate: invitationInfo.StartDate != null ? DateOnly.FromDateTime((DateTime)invitationInfo.StartDate) : invitationOld.StartDate,
+            finishDate: invitationInfo.FinishDate != null ? DateOnly.FromDateTime((DateTime)invitationInfo.FinishDate) : invitationOld.FinishDate,
+            idClient: invitationOld.IdClient,
             idTemplate: invitationInfo.IdTemplate ?? invitationOld.IdTemplate
         );
         

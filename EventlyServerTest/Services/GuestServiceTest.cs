@@ -24,12 +24,12 @@ public class GuestServiceTest : IDisposable
 
     private void Setup()
     {
-        var invitation = new LandingInvitationCreatingDto(
+        var invitation = new LandingInvitation(
             "Invitation",
             DateOnly.FromDateTime(DateTime.Today),
             DateOnly.FromDateTime(DateTime.Today).AddDays(7), 1, 1
         );
-        _invitationRepository.Add(invitation.ToLandingInvitation());
+        _invitationRepository.Add(invitation);
     }
 
     public void Dispose()

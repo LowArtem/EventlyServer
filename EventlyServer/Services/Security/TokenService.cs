@@ -68,7 +68,7 @@ public class TokenService
     /// <returns>объект, представляющий пользователя</returns>
     /// <exception cref="ArgumentException">если токен некорректен</exception>
     /// <exception cref="InvalidDataException">если пользователь с такими входными данными не существует</exception>
-    public async Task<User> GetUserOrThrow(string token)
+    public async Task<User> GetUserFromTokenOrThrow(string token)
     {
         string? login = GetLoginFromToken(token);
         
@@ -77,6 +77,23 @@ public class TokenService
             throw new ArgumentException("Given token is invalid", nameof(token));
         }
 
+        var user = await _userRepository.Items.FirstOrDefaultAsync(u => u.Email == login);
+        if (user == null)
+        {
+            throw new InvalidDataException("User with given email cannot be found");
+        }
+
+        return user;
+    }
+    
+    /// <summary>
+    /// Получает объект пользователя из логина (email). Выбрасывает исключение, если пользователя получить невозможно
+    /// </summary>
+    /// <param name="login">Логин пользователя (email)</param>
+    /// <returns>объект, представляющий пользователя</returns>
+    /// <exception cref="InvalidDataException">если пользователь с такими входными данными не существует</exception>
+    public async Task<User> GetUserFromLoginOrThrow(string login)
+    {
         var user = await _userRepository.Items.FirstOrDefaultAsync(u => u.Email == login);
         if (user == null)
         {

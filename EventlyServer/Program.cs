@@ -6,6 +6,7 @@ using EventlyServer.Services.Security;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json.Converters;
 using Swashbuckle.AspNetCore.SwaggerUI;
 
 namespace EventlyServer;
@@ -41,6 +42,11 @@ public static class Program
         builder.Services.AddServices();
         builder.Services.AddControllers();
 
+        builder.Services.AddMvcCore().AddNewtonsoftJson(o =>
+        {
+            o.SerializerSettings.Converters.Add(new StringEnumConverter());
+        });
+        
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 
         builder.Services.AddEndpointsApiExplorer();
@@ -85,6 +91,7 @@ public static class Program
             var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
             options.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
         });
+        builder.Services.AddSwaggerGenNewtonsoftSupport();
 
         var app = builder.Build();
 
