@@ -2,6 +2,7 @@
 using EventlyServer.Data.Entities;
 using EventlyServer.Data.Mappers;
 using EventlyServer.Data.Repositories.Abstracts;
+using EventlyServer.Exceptions;
 using Microsoft.EntityFrameworkCore;
 
 namespace EventlyServer.Services;
@@ -22,13 +23,13 @@ public class TemplateService
     /// Добавить новый шаблон
     /// </summary>
     /// <param name="template">описание шаблона</param>
-    /// <exception cref="ArgumentException">если шаблон с данным именем уже существует</exception>
+    /// <exception cref="EntityExistsException">если шаблон с данным именем уже существует</exception>
     public async Task AddTemplate(TemplateCreatingDto template)
     {
         var templateTest = await _templateRepository.Items.SingleOrDefaultAsync(t => t.Name == template.Name);
         if (templateTest != null)
         {
-            throw new ArgumentException("Template with this name already exists", nameof(template));
+            throw new EntityExistsException("Template with this name already exists");
         }
 
         await _templateRepository.AddAsync(template.ToTemplate());
@@ -38,13 +39,13 @@ public class TemplateService
     /// Обновить шаблон
     /// </summary>
     /// <param name="updated">описание шаблона (обновляются только переданные методы)</param>
-    /// <exception cref="InvalidDataException">если шаблона с переданным id не существует</exception>
+    /// <exception cref="EntityNotFoundException">если шаблона с переданным id не существует</exception>
     public async Task UpdateTemplate(TemplateUpdateDto updated)
     {
         var templateOld = await _templateRepository.GetAsync(updated.Id);
         if (templateOld == null)
         {
-            throw new InvalidDataException("Template with given id cannot be found");
+            throw new EntityNotFoundException("Template with given id cannot be found");
         }
 
         Template templateNew = new Template(
@@ -63,13 +64,13 @@ public class TemplateService
     /// Удалить шаблон
     /// </summary>
     /// <param name="id">id удаляемого шаблона</param>
-    /// <exception cref="InvalidDataException">если шаблона с переданным id не существует</exception>
+    /// <exception cref="EntityNotFoundException">если шаблона с переданным id не существует</exception>
     public async Task DeleteTemplate(int id)
     {
         var template = await _templateRepository.GetAsync(id);
         if (template == null)
         {
-            throw new InvalidDataException("Template with given id cannot be found");
+            throw new EntityNotFoundException("Template with given id cannot be found");
         }
         
         await _templateRepository.RemoveAsync(id);
@@ -91,13 +92,13 @@ public class TemplateService
     /// </summary>
     /// <param name="id">ID выбранного шаблона</param>
     /// <returns>информация о выбранном шаблоне</returns>
-    /// <exception cref="InvalidDataException">если шаблона с переданным id не существует</exception>
+    /// <exception cref="EntityNotFoundException">если шаблона с переданным id не существует</exception>
     public async Task<TemplateDto> GetTemplateDetails(int id)
     {
         var template = await _templateRepository.GetAsync(id);
         if (template == null)
         {
-            throw new InvalidDataException("Template with given id cannot be found");
+            throw new EntityNotFoundException("Template with given id cannot be found");
         }
 
         return template.ToDto();

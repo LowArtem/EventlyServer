@@ -3,6 +3,7 @@ using System.Security.Authentication;
 using System.Security.Claims;
 using EventlyServer.Data.Entities;
 using EventlyServer.Data.Repositories.Abstracts;
+using EventlyServer.Exceptions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
@@ -26,13 +27,13 @@ public class TokenService
     /// <param name="login">имейл пользователя</param>
     /// <param name="password">пароль пользователя</param>
     /// <returns>сгенерированный токен</returns>
-    /// <exception cref="AuthenticationException">если пользователь с такими учетными данными не обнаружен</exception>
+    /// <exception cref="EntityNotFoundException">если пользователь с такими учетными данными не обнаружен</exception>
     public async Task<string> GenerateTokenAsync(string login, string password)
     {
         var identity = await GetIdentityAsync(login, password);
         if (identity == null)
         {
-            throw new AuthenticationException("User with these credentials cannot be found");
+            throw new EntityNotFoundException("User with these credentials cannot be found");
         }
  
         var now = DateTime.UtcNow;
@@ -67,7 +68,7 @@ public class TokenService
     /// <param name="token">JWT-токен</param>
     /// <returns>объект, представляющий пользователя</returns>
     /// <exception cref="ArgumentException">если токен некорректен</exception>
-    /// <exception cref="InvalidDataException">если пользователь с такими входными данными не существует</exception>
+    /// <exception cref="EntityNotFoundException">если пользователь с такими входными данными не существует</exception>
     public async Task<User> GetUserFromTokenOrThrow(string token)
     {
         string? login = GetLoginFromToken(token);
@@ -80,7 +81,7 @@ public class TokenService
         var user = await _userRepository.Items.FirstOrDefaultAsync(u => u.Email == login);
         if (user == null)
         {
-            throw new InvalidDataException("User with given email cannot be found");
+            throw new EntityNotFoundException("User with given email cannot be found");
         }
 
         return user;
@@ -91,13 +92,13 @@ public class TokenService
     /// </summary>
     /// <param name="login">Логин пользователя (email)</param>
     /// <returns>объект, представляющий пользователя</returns>
-    /// <exception cref="InvalidDataException">если пользователь с такими входными данными не существует</exception>
+    /// <exception cref="EntityNotFoundException">если пользователь с такими входными данными не существует</exception>
     public async Task<User> GetUserFromLoginOrThrow(string login)
     {
         var user = await _userRepository.Items.FirstOrDefaultAsync(u => u.Email == login);
         if (user == null)
         {
-            throw new InvalidDataException("User with given email cannot be found");
+            throw new EntityNotFoundException("User with given email cannot be found");
         }
 
         return user;
