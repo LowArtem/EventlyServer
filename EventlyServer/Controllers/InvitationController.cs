@@ -38,7 +38,7 @@ public class InvitationController : ControllerBase
     [Authorize(Roles = nameof(UserRoles.USER))]
     [ProducesResponseType(StatusCodes.Status202Accepted)]
     [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(Nullable), StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult> OrderInvitation([FromBody] LandingInvitationCreatingDto invitation)
     {
         try
@@ -70,7 +70,7 @@ public class InvitationController : ControllerBase
     [ProducesResponseType(typeof(LandingInvitationDto), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(Nullable) ,StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<LandingInvitationDto>> GetInvitationDetails([FromRoute] int id)
     {
         try
@@ -106,7 +106,7 @@ public class InvitationController : ControllerBase
     [Authorize(Roles = nameof(UserRoles.USER))]
     [ProducesResponseType(typeof(List<LandingInvitationShortDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(Nullable) ,StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<List<LandingInvitationShortDto>>> GetAllUsersInvitations()
     {
         try
@@ -153,7 +153,7 @@ public class InvitationController : ControllerBase
     [ProducesResponseType(typeof(List<LandingInvitationShortDto>), StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(Nullable) ,StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<List<LandingInvitationShortDto>>> GetAllUsersInvitationsById([FromRoute] int clientId)
     {
         try
@@ -193,7 +193,7 @@ public class InvitationController : ControllerBase
     [ProducesResponseType(StatusCodes.Status202Accepted)]
     [ProducesResponseType(typeof(string),StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
-    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(Nullable) ,StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult> EditInvitation([FromBody] LandingInvitationUpdatingDto newInvitation)
     {
         try
