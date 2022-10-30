@@ -1,5 +1,5 @@
 ﻿using EventlyServer.Data.Dto;
-using EventlyServer.Exceptions;
+using EventlyServer.Extensions;
 using EventlyServer.Services;
 using EventlyServer.Services.Security;
 using Microsoft.AspNetCore.Authorization;
@@ -34,14 +34,7 @@ public class TemplateController : ControllerBase
     [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<List<TemplateDto>>> GetAllTemplates()
     {
-        try
-        {
-            return await _templateService.GetTemplates();
-        }
-        catch (Exception e)
-        {
-            return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
-        }
+        return await this.SendResponseAsync(async () => await _templateService.GetTemplates());
     }
 
     /// <summary>
@@ -50,27 +43,16 @@ public class TemplateController : ControllerBase
     /// <param name="id">ID выбранного шаблона</param>
     /// <returns>Подробная информация о выбранном шаблоне</returns>
     /// <response code="200">Подробная информация о выбранном шаблоне</response>
-    /// <response code="404">Шаблон с таким ID не существует</response>
+    /// <response code="400">Шаблон с таким ID не существует</response>
     /// <response code="500">Неизвестная ошибка сервера (вероятнее БД)</response>
     [HttpGet]
     [Route("{id:int}")]
     [ProducesResponseType(typeof(TemplateDto), StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<TemplateDto>> GetTemplateDetails([FromRoute] int id)
     {
-        try
-        {
-            return await _templateService.GetTemplateDetails(id);
-        }
-        catch (EntityNotFoundException e)
-        {
-            return StatusCode(StatusCodes.Status404NotFound, e.Message);
-        }
-        catch (Exception e)
-        {
-            return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
-        }
+        return await this.SendResponseAsync(async () => await _templateService.GetTemplateDetails(id));
     }
 
     /// <summary>
@@ -81,7 +63,7 @@ public class TemplateController : ControllerBase
     /// <remarks>
     /// Требуется авторизация администратора
     /// </remarks>
-    /// <response code="201">Шаблон создан успешно</response>
+    /// <response code="200">Шаблон создан успешно</response>
     /// <response code="409">Шаблон с таким именем уже существует</response>
     /// <response code="500">Неизвестная ошибка сервера (вероятнее БД)</response>
     /// <response code="401">Ошибка авторизации</response>
@@ -89,25 +71,13 @@ public class TemplateController : ControllerBase
     [HttpPost]
     [Route("")]
     [Authorize(Roles = nameof(UserRoles.ADMIN))]
-    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status409Conflict)]
     [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(typeof(Nullable) ,StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult> AddNewTemplate([FromBody] TemplateCreatingDto template)
     {
-        try
-        {
-            await _templateService.AddTemplate(template);
-            return Ok();
-        }
-        catch (EntityExistsException e)
-        {
-            return Conflict(e.Message);
-        }
-        catch (Exception e)
-        {
-            return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
-        }
+        return await this.SendResponseAsync(async () => await _templateService.AddTemplate(template));
     }
 
     /// <summary>
@@ -119,7 +89,7 @@ public class TemplateController : ControllerBase
     /// Требуется авторизация администратора
     /// </remarks>
     /// <response code="200">Шаблон удален успешно</response>
-    /// <response code="404">Шаблон с таким ID не существует</response>
+    /// <response code="400">Шаблон с таким ID не существует</response>
     /// <response code="500">Неизвестная ошибка сервера (вероятнее БД)</response>
     /// <response code="401">Ошибка авторизации</response>
     /// <response code="403">Нет доступа</response>
@@ -127,23 +97,11 @@ public class TemplateController : ControllerBase
     [Route("{id:int}")]
     [Authorize(Roles = nameof(UserRoles.ADMIN))]
     [ProducesResponseType(StatusCodes.Status200OK)]
-    [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(typeof(Nullable) ,StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult> DeleteTemplate([FromRoute] int id)
     {
-        try
-        {
-            await _templateService.DeleteTemplate(id);
-            return Ok();
-        }
-        catch (EntityNotFoundException e)
-        {
-            return NotFound(e.Message);
-        }
-        catch (Exception e)
-        {
-            return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
-        }
+        return await this.SendResponseAsync(async () => await _templateService.DeleteTemplate(id));
     }
 }
