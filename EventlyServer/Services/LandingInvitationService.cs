@@ -55,11 +55,9 @@ public class LandingInvitationService
     /// <summary>
     /// Получить полную информацию о выбранном приглашении
     /// </summary>
-    /// <param name="login">Логин пользователя (email)</param>
     /// <param name="id">id выбранного приглашения</param>
     /// <returns>полная информация о приглашении</returns>
     /// <exception cref="InvalidDataException">если приглашения с данным id не существует</exception>
-    /// <exception cref="InvalidDataException">если пользователь с такими входными данными не существует</exception>
     public async Task<LandingInvitationDto> GetInvitationDetails(int id)
     {
         var invitation = await _landingInvitationRepository.GetAsync(id);

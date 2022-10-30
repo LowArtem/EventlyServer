@@ -81,10 +81,6 @@ public class InvitationController : ControllerBase
         {
             return StatusCode(StatusCodes.Status404NotFound, e.Message);
         }
-        catch (ArgumentNullException e)
-        {
-            return StatusCode(StatusCodes.Status401Unauthorized, e.Message);
-        }
         catch (Exception e)
         {
             return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
