@@ -39,9 +39,10 @@ public class UserService
     /// Добавляет нового пользователя
     /// </summary>
     /// <param name="user">информация о новом пользователе</param>
+    /// <param name="isAdmin">является ли пользователь администратором</param>
     /// <returns>JWT-токен для данного пользователя</returns>
     /// <exception cref="AuthenticationException">если пользователь с таким имейлом уже существует</exception>
-    public async Task<string> Register(UserRegisterDto user)
+    public async Task<string> Register(UserRegisterDto user, bool isAdmin)
     {
         var testUser = await _userRepository.Items.FirstOrDefaultAsync(item => item.Email == user.Email);
         if (testUser != null)
@@ -49,7 +50,7 @@ public class UserService
             throw new AuthenticationException("User with this email already exists");
         }
 
-        var registeredUser = await _userRepository.AddAsync(user.ToUser());
+        var registeredUser = await _userRepository.AddAsync(user.ToUser(isAdmin));
         return await _tokenService.GenerateTokenAsync(registeredUser.Email, registeredUser.Password);
     }
 

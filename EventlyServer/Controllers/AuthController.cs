@@ -4,6 +4,7 @@ using EventlyServer.Data.Dto;
 using EventlyServer.Data.Mappers;
 using EventlyServer.Services;
 using EventlyServer.Services.Security;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EventlyServer.Controllers;
@@ -40,7 +41,7 @@ public class AuthController : ControllerBase
     {
         try
         {
-            var token = await _userService.Register(user);
+            var token = await _userService.Register(user, false);
             var email = TokenService.GetLoginFromToken(token);
 
             if (email == null) throw new SecurityException("Incorrect token");
@@ -59,6 +60,43 @@ public class AuthController : ControllerBase
         catch (ArgumentException e)
         {
             return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+        }
+        catch (Exception e)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
+        }
+    }
+
+    /// <summary>
+    /// Добавление нового администратора
+    /// </summary>
+    /// <param name="user">Данные нового администратора</param>
+    /// <returns>Статус код</returns>
+    /// <remarks>
+    /// Требуется авторизация администратора
+    /// </remarks>
+    /// <response code="201">Администратор успешно добавлен</response>
+    /// <response code="409">Пользователь с таким email уже существует</response>
+    /// <response code="500">Неизвестная ошибка сервера (вероятнее БД)</response>
+    /// <response code="401">Ошибка авторизации</response>
+    /// <response code="403">Нет доступа</response>
+    [HttpPost]
+    [Route("admin/register")]
+    [Authorize(Roles = nameof(UserRoles.ADMIN))]
+    [ProducesResponseType(StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status409Conflict)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    public async Task<ActionResult> AddNewAdmin([FromBody] UserRegisterDto user)
+    {
+        try
+        {
+            await _userService.Register(user, true);
+            return StatusCode(StatusCodes.Status201Created);
+        }
+        catch (AuthenticationException e)
+        {
+            return Conflict(e.Message);
         }
         catch (Exception e)
         {
