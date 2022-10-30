@@ -106,7 +106,7 @@ public class TokenService
 
     /// <summary>
     /// Асинхронно получает идентифицирующую информацию о пользователе:
-    /// логин (имейл) и роль (user/admin)
+    /// логин (имейл), ID и роль (user/admin)
     /// </summary>
     /// <param name="email">имейл пользователя</param>
     /// <param name="password">пароль пользователя</param>
@@ -122,6 +122,7 @@ public class TokenService
             var claims = new List<Claim>
             {
                 new Claim(ClaimsIdentity.DefaultNameClaimType, user.Email),
+                new Claim(ClaimTypes.Sid, user.Id.ToString()),
                 new Claim(ClaimsIdentity.DefaultRoleClaimType, GetUserRole(user))
             };
             ClaimsIdentity? claimsIdentity =

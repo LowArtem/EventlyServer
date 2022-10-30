@@ -19,6 +19,7 @@ public static class Program
 
         // Add services to the container.
 
+        builder.Services.Configure<RouteOptions>(o => o.LowercaseUrls = true);
         builder.Services.AddAuthorization();
         builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>

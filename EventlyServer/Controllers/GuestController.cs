@@ -1,4 +1,5 @@
-﻿using EventlyServer.Data.Dto;
+﻿using EventlyServer.Controllers.Abstracts;
+using EventlyServer.Data.Dto;
 using EventlyServer.Extensions;
 using EventlyServer.Services;
 using EventlyServer.Services.Security;
@@ -10,10 +11,7 @@ namespace EventlyServer.Controllers;
 /// <summary>
 /// Работа с гостями
 /// </summary>
-[ApiController]
-[Route("api/guest")]
-[Produces("application/json")]
-public class GuestController : ControllerBase
+public class GuestController : BaseApiController
 {
     private readonly GuestService _guestService;
 

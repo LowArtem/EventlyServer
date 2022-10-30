@@ -1,4 +1,5 @@
-﻿using EventlyServer.Data.Dto;
+﻿using EventlyServer.Controllers.Abstracts;
+using EventlyServer.Data.Dto;
 using EventlyServer.Data.Mappers;
 using EventlyServer.Extensions;
 using EventlyServer.Services;
@@ -11,10 +12,7 @@ namespace EventlyServer.Controllers;
 /// <summary>
 /// Аутентификация (регистрация, логин) клиента
 /// </summary>
-[ApiController]
-[Route("api/auth")]
-[Produces("application/json")]
-public class AuthController : ControllerBase
+public class AuthController : BaseApiController
 {
     private readonly UserService _userService;
 

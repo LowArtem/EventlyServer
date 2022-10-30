@@ -1,4 +1,5 @@
-﻿using EventlyServer.Data.Dto;
+﻿using EventlyServer.Controllers.Abstracts;
+using EventlyServer.Data.Dto;
 using EventlyServer.Extensions;
 using EventlyServer.Services;
 using EventlyServer.Services.Security;
@@ -10,10 +11,7 @@ namespace EventlyServer.Controllers;
 /// <summary>
 /// Работа с шаблонами приглашений
 /// </summary>
-[ApiController]
-[Route("api/template")]
-[Produces("application/json")]
-public class TemplateController : ControllerBase
+public class TemplateController : BaseApiController
 {
     private readonly TemplateService _templateService;
 

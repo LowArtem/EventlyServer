@@ -1,5 +1,6 @@
 ﻿using System.Security.Authentication;
 using System.Security.Claims;
+using EventlyServer.Controllers.Abstracts;
 using EventlyServer.Data.Dto;
 using EventlyServer.Extensions;
 using EventlyServer.Services;
@@ -12,10 +13,7 @@ namespace EventlyServer.Controllers;
 /// <summary>
 /// Работа с приглашениями
 /// </summary>
-[ApiController]
-[Route("api/invitation")]
-[Produces("application/json")]
-public class InvitationController : ControllerBase
+public class InvitationController : BaseApiController
 {
     private readonly LandingInvitationService _landingInvitationService;
 
@@ -91,7 +89,7 @@ public class InvitationController : ControllerBase
         return await this.SendResponseAsync(async () =>
         {
             // Получение логина зарегистрированного пользователя
-            var login = HttpContext.User.FindFirst(ClaimTypes.Name)?.Value;
+            var login = HttpContext.User.Claims.FirstOrDefault(x => x.Type == ClaimTypes.Name)?.Value;
             if (login == null)
             {
                 throw new AuthenticationException("Login received from token is null, incorrect token");
