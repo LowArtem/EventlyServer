@@ -46,7 +46,7 @@ public class AuthController : ControllerBase
             if (email == null) throw new SecurityException("Incorrect token");
 
             var created = await _userService.GetUserByEmail(email);
-            return created.ToShortDto(token);
+            return StatusCode(StatusCodes.Status201Created, created.ToShortDto(token));
         }
         catch (AuthenticationException e)
         {
