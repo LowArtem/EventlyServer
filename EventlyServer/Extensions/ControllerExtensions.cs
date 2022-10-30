@@ -27,6 +27,10 @@ public static class ControllerExtensions
         {
             return controller.BadRequest(e.Message);
         }
+        catch (ArgumentNullException e)
+        {
+            return controller.BadRequest(e.Message);
+        }
         catch (AuthenticationException e)
         {
             return controller.Unauthorized(e.Message);
@@ -55,6 +59,10 @@ public static class ControllerExtensions
             return controller.Conflict(e.Message);
         }
         catch (EntityNotFoundException e)
+        {
+            return controller.BadRequest(e.Message);
+        }
+        catch (ArgumentNullException e)
         {
             return controller.BadRequest(e.Message);
         }
@@ -89,9 +97,13 @@ public static class ControllerExtensions
         {
             return controller.BadRequest(e.Message);
         }
+        catch (ArgumentNullException e)
+        {
+            return controller.BadRequest(e.Message);
+        }
         catch (AuthenticationException e)
         {
-            return controller.StatusCode(StatusCodes.Status401Unauthorized, e.Message);
+            return controller.Unauthorized(e.Message);
         }
         catch (Exception e)
         {
@@ -120,9 +132,13 @@ public static class ControllerExtensions
         {
             return controller.BadRequest(e.Message);
         }
+        catch (ArgumentNullException e)
+        {
+            return controller.BadRequest(e.Message);
+        }
         catch (AuthenticationException e)
         {
-            return controller.StatusCode(StatusCodes.Status401Unauthorized, e.Message);
+            return controller.Unauthorized(e.Message);
         }
         catch (Exception e)
         {
