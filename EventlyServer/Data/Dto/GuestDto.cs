@@ -27,4 +27,33 @@ public record GuestDto
     public string Name { get; init; }
 }
 
-public record GuestFullCreatingDto(string Name, string PhoneNumber, int IdInvitation);
+/// <summary>
+/// Гость, принявший приглашение на мероприятие
+/// </summary>
+public record GuestFullCreatingDto
+{
+    /// <summary>
+    /// Гость, принявший приглашение на мероприятие
+    /// </summary>
+    /// <param name="name">Имя</param>
+    /// <param name="phoneNumber">Номер телефона</param>
+    /// <param name="idInvitation">ID принимаемого приглашения</param>
+    public GuestFullCreatingDto(string name, string phoneNumber, int idInvitation)
+    {
+        Name = name;
+        PhoneNumber = phoneNumber;
+        IdInvitation = idInvitation;
+    }
+
+    /// <summary>Имя</summary>
+    [Required]
+    public string Name { get; init; }
+
+    /// <summary>Номер телефона</summary>
+    [Required]
+    public string PhoneNumber { get; init; }
+
+    /// <summary>ID принимаемого приглашения</summary>
+    [Required]
+    public int IdInvitation { get; init; }
+}
