@@ -1,4 +1,5 @@
 ﻿using EventlyServer.Data.Dto;
+using EventlyServer.Exceptions;
 using EventlyServer.Services;
 using EventlyServer.Services.Security;
 using Microsoft.AspNetCore.Authorization;
@@ -62,7 +63,7 @@ public class TemplateController : ControllerBase
         {
             return await _templateService.GetTemplateDetails(id);
         }
-        catch (InvalidDataException e)
+        catch (EntityNotFoundException e)
         {
             return StatusCode(StatusCodes.Status404NotFound, e.Message);
         }
@@ -99,7 +100,7 @@ public class TemplateController : ControllerBase
             await _templateService.AddTemplate(template);
             return Ok();
         }
-        catch (ArgumentException e)
+        catch (EntityExistsException e)
         {
             return Conflict(e.Message);
         }
@@ -136,7 +137,7 @@ public class TemplateController : ControllerBase
             await _templateService.DeleteTemplate(id);
             return Ok();
         }
-        catch (InvalidDataException e)
+        catch (EntityNotFoundException e)
         {
             return NotFound(e.Message);
         }

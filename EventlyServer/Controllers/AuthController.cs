@@ -1,7 +1,6 @@
-﻿using System.Security;
-using System.Security.Authentication;
-using EventlyServer.Data.Dto;
+﻿using EventlyServer.Data.Dto;
 using EventlyServer.Data.Mappers;
+using EventlyServer.Exceptions;
 using EventlyServer.Services;
 using EventlyServer.Services.Security;
 using Microsoft.AspNetCore.Authorization;
@@ -44,22 +43,14 @@ public class AuthController : ControllerBase
             var token = await _userService.Register(user, false);
             var email = TokenService.GetLoginFromToken(token);
 
-            if (email == null) throw new SecurityException("Incorrect token");
+            if (email == null) throw new ArgumentException("Incorrect token generated");
 
             var created = await _userService.GetUserByEmail(email);
             return StatusCode(StatusCodes.Status201Created, created.ToShortDto(token));
         }
-        catch (AuthenticationException e)
+        catch (EntityExistsException e)
         {
             return Conflict(e.Message);
-        }
-        catch (SecurityException e)
-        {
-            return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
-        }
-        catch (ArgumentException e)
-        {
-            return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
         }
         catch (Exception e)
         {
@@ -94,7 +85,7 @@ public class AuthController : ControllerBase
             await _userService.Register(user, true);
             return StatusCode(StatusCodes.Status201Created);
         }
-        catch (AuthenticationException e)
+        catch (EntityExistsException e)
         {
             return Conflict(e.Message);
         }
@@ -124,22 +115,14 @@ public class AuthController : ControllerBase
             var token = await _userService.Login(user.Email, user.Password);
             var email = TokenService.GetLoginFromToken(token);
 
-            if (email == null) throw new SecurityException("Incorrect token");
+            if (email == null) throw new ArgumentException("Incorrect token generated");
 
             var logged = await _userService.GetUserByEmail(email);
             return logged.ToShortDto(token);
         }
-        catch (AuthenticationException e)
+        catch (EntityNotFoundException e)
         {
             return BadRequest(e.Message);
-        }
-        catch (SecurityException e)
-        {
-            return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
-        }
-        catch (ArgumentException e)
-        {
-            return StatusCode(StatusCodes.Status500InternalServerError, e.Message);
         }
         catch (Exception e)
         {

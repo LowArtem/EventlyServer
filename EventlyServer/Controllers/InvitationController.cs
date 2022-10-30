@@ -1,5 +1,7 @@
-﻿using System.Security.Claims;
+﻿using System.Security.Authentication;
+using System.Security.Claims;
 using EventlyServer.Data.Dto;
+using EventlyServer.Exceptions;
 using EventlyServer.Services;
 using EventlyServer.Services.Security;
 using Microsoft.AspNetCore.Authorization;
@@ -30,13 +32,13 @@ public class InvitationController : ControllerBase
     /// <remarks>
     /// Требуется авторизация пользователя
     /// </remarks>
-    /// <response code="202">Заказ принят</response>
+    /// <response code="201">Заказ принят</response>
     /// <response code="500">Неизвестная ошибка сервера (вероятнее БД)</response>
     /// <response code="401">Ошибка авторизации</response>
     [HttpPost]
     [Route("")]
     [Authorize(Roles = nameof(UserRoles.USER))]
-    [ProducesResponseType(StatusCodes.Status202Accepted)]
+    [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(typeof(Nullable), StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult> OrderInvitation([FromBody] LandingInvitationCreatingDto invitation)
@@ -44,7 +46,7 @@ public class InvitationController : ControllerBase
         try
         {
             await _landingInvitationService.AddInvitation(invitation);
-            return Ok();
+            return StatusCode(StatusCodes.Status201Created);
         }
         catch (Exception e)
         {
@@ -77,7 +79,7 @@ public class InvitationController : ControllerBase
         {
             return await _landingInvitationService.GetInvitationDetails(id);
         }
-        catch (InvalidDataException e)
+        catch (EntityNotFoundException e)
         {
             return StatusCode(StatusCodes.Status404NotFound, e.Message);
         }
@@ -111,16 +113,16 @@ public class InvitationController : ControllerBase
             var login = HttpContext.User.FindFirst(ClaimTypes.Name)?.Value;
             if (login == null)
             {
-                throw new ArgumentNullException(nameof(login), "Login, received from token is null, incorrect token");
+                throw new AuthenticationException("Login received from token is null, incorrect token");
             }
 
             return await _landingInvitationService.GetInvitationsByUser(login);
         }
-        catch (InvalidDataException e)
+        catch (EntityNotFoundException e)
         {
             return StatusCode(StatusCodes.Status401Unauthorized, e.Message);
         }
-        catch (ArgumentNullException e)
+        catch (AuthenticationException e)
         {
             return StatusCode(StatusCodes.Status401Unauthorized, e.Message);
         }
@@ -156,13 +158,9 @@ public class InvitationController : ControllerBase
         {
             return await _landingInvitationService.GetInvitationsByUserId(clientId);
         }
-        catch (InvalidDataException e)
+        catch (EntityNotFoundException e)
         {
             return StatusCode(StatusCodes.Status404NotFound, e.Message);
-        }
-        catch (ArgumentNullException e)
-        {
-            return StatusCode(StatusCodes.Status401Unauthorized, e.Message);
         }
         catch (Exception e)
         {
@@ -197,7 +195,7 @@ public class InvitationController : ControllerBase
             await _landingInvitationService.UpdateInvitation(newInvitation);
             return Ok();
         }
-        catch (InvalidDataException e)
+        catch (EntityNotFoundException e)
         {
             return StatusCode(StatusCodes.Status404NotFound, e.Message);
         }
