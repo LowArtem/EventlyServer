@@ -16,6 +16,8 @@ public static class Program
     public static void Main(string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
+        
+        Console.WriteLine("It still works here");
 
         // Add services to the container.
 
