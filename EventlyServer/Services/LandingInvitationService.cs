@@ -22,25 +22,12 @@ public class LandingInvitationService
         _tokenService = tokenService;
         _userRepository = userRepository;
     }
-
-    /// <summary>
-    /// Получить список приглашений пользователя
-    /// </summary>
-    /// <param name="login">Логин пользователя (email)</param>
-    /// <returns>список сокращенных предствлений приглашений</returns>
-    /// <exception cref="EntityNotFoundException">если пользователь с такими входными данными не существует</exception>
-    public async Task<List<LandingInvitationShortDto>> GetInvitationsByUser(string login)
-    {
-        var user = await _tokenService.GetUserFromLoginOrThrow(login);
-
-        return user.LandingInvitations.ConvertAll(i => i.ToShortDto());
-    }
     
     /// <summary>
-    /// Получить список приглашений пользователя по его ID (для админов)
+    /// Получить список приглашений пользователя по его ID
     /// </summary>
     /// <param name="id">ID пользователя</param>
-    /// <returns>список сокращенных предствлений приглашений</returns>
+    /// <returns>список сокращенных представлений приглашений</returns>
     /// <exception cref="EntityNotFoundException">если пользователь с таким ID не существует</exception>
     public async Task<List<LandingInvitationShortDto>> GetInvitationsByUserId(int id)
     {

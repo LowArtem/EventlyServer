@@ -86,9 +86,9 @@ public class InvitationController : BaseApiController
     {
         return await this.SendResponseAsync(async () =>
         {
-            var login = UserEmail.IsSuccess ? UserEmail.Value : throw UserEmail.Exception;
+            var id = UserId.IsSuccess ? UserId.Value : throw UserId.Exception;
             
-            return await _landingInvitationService.GetInvitationsByUser(login);
+            return await _landingInvitationService.GetInvitationsByUserId(id);
         });
     }
 

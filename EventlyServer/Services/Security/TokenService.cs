@@ -61,31 +61,6 @@ public class TokenService
         var decryptedToken = jsonToken as JwtSecurityToken;
         return decryptedToken?.Claims.First().Value;
     }
-
-    /// <summary>
-    /// Получает объект пользователя из токена. Выбрасывает исключение, если пользователя получить невозможно
-    /// </summary>
-    /// <param name="token">JWT-токен</param>
-    /// <returns>объект, представляющий пользователя</returns>
-    /// <exception cref="ArgumentException">если токен некорректен</exception>
-    /// <exception cref="EntityNotFoundException">если пользователь с такими входными данными не существует</exception>
-    public async Task<User> GetUserFromTokenOrThrow(string token)
-    {
-        string? login = GetLoginFromToken(token);
-        
-        if (login == null)
-        {
-            throw new ArgumentException("Given token is invalid", nameof(token));
-        }
-
-        var user = await _userRepository.Items.FirstOrDefaultAsync(u => u.Email == login);
-        if (user == null)
-        {
-            throw new EntityNotFoundException("User with given email cannot be found");
-        }
-
-        return user;
-    }
     
     /// <summary>
     /// Получает объект пользователя из логина (email). Выбрасывает исключение, если пользователя получить невозможно

@@ -63,8 +63,22 @@ public class UserService
     /// <exception cref="EntityNotFoundException">если пользователь с таким email не существует</exception>
     public async Task<User> GetUserByEmail(string email)
     {
-        var user = await _userRepository.Items.FirstOrDefaultAsync(item => item.Email == email);
-        return user ?? throw new EntityNotFoundException("User with this id cannot be found");
+        return await _tokenService.GetUserFromLoginOrThrow(email);
+    }
+
+    /// <summary>
+    /// Получает пользователя по ID
+    /// </summary>
+    /// <param name="id">ID пользователя</param>
+    /// <returns>информацию о данном пользователе</returns>
+    /// <exception cref="EntityNotFoundException">если пользователь с таким ID не существует</exception>
+    public async Task<User> GetUserById(int id)
+    {
+        var user = await _userRepository.GetAsync(id);
+        if (user == null)
+            throw new EntityNotFoundException($"User with given id ({id}) cannot be found");
+        
+        return user;
     }
 
     /// <summary>
