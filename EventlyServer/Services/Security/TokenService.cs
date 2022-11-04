@@ -4,6 +4,7 @@ using System.Security.Claims;
 using EventlyServer.Data.Entities;
 using EventlyServer.Data.Repositories.Abstracts;
 using EventlyServer.Exceptions;
+using EventlyServer.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
@@ -28,12 +29,12 @@ public class TokenService
     /// <param name="password">пароль пользователя</param>
     /// <returns>сгенерированный токен</returns>
     /// <exception cref="EntityNotFoundException">если пользователь с такими учетными данными не обнаружен</exception>
-    public async Task<string> GenerateTokenAsync(string login, string password)
+    public async Task<Result<string>> GenerateTokenAsync(string login, string password)
     {
         var identity = await GetIdentityAsync(login, password);
         if (identity == null)
         {
-            throw new EntityNotFoundException("User with these credentials cannot be found");
+            return new EntityNotFoundException("User with these credentials cannot be found");
         }
  
         var now = DateTime.UtcNow;
@@ -68,12 +69,12 @@ public class TokenService
     /// <param name="login">Логин пользователя (email)</param>
     /// <returns>объект, представляющий пользователя</returns>
     /// <exception cref="EntityNotFoundException">если пользователь с такими входными данными не существует</exception>
-    public async Task<User> GetUserFromLoginOrThrow(string login)
+    public async Task<Result<User>> GetUserFromLoginOrThrow(string login)
     {
         var user = await _userRepository.Items.FirstOrDefaultAsync(u => u.Email == login);
         if (user == null)
         {
-            throw new EntityNotFoundException("User with given email cannot be found");
+            return new EntityNotFoundException("User with given email cannot be found");
         }
 
         return user;

@@ -3,6 +3,7 @@ using EventlyServer.Data.Entities;
 using EventlyServer.Data.Mappers;
 using EventlyServer.Data.Repositories.Abstracts;
 using EventlyServer.Exceptions;
+using EventlyServer.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace EventlyServer.Services;
@@ -24,15 +25,16 @@ public class TemplateService
     /// </summary>
     /// <param name="template">описание шаблона</param>
     /// <exception cref="EntityExistsException">если шаблон с данным именем уже существует</exception>
-    public async Task AddTemplate(TemplateCreatingDto template)
+    public async Task<Result> AddTemplate(TemplateCreatingDto template)
     {
         var templateTest = await _templateRepository.Items.SingleOrDefaultAsync(t => t.Name == template.Name);
         if (templateTest != null)
         {
-            throw new EntityExistsException("Template with this name already exists");
+            return new EntityExistsException("Template with this name already exists");
         }
 
         await _templateRepository.AddAsync(template.ToTemplate());
+        return Result.Success();
     }
 
     /// <summary>
@@ -40,12 +42,12 @@ public class TemplateService
     /// </summary>
     /// <param name="updated">описание шаблона (обновляются только переданные методы)</param>
     /// <exception cref="EntityNotFoundException">если шаблона с переданным id не существует</exception>
-    public async Task UpdateTemplate(TemplateUpdateDto updated)
+    public async Task<Result> UpdateTemplate(TemplateUpdateDto updated)
     {
         var templateOld = await _templateRepository.GetAsync(updated.Id);
         if (templateOld == null)
         {
-            throw new EntityNotFoundException("Template with given id cannot be found");
+            return new EntityNotFoundException("Template with given id cannot be found");
         }
 
         Template templateNew = new Template(
@@ -58,6 +60,7 @@ public class TemplateService
         );
 
         await _templateRepository.UpdateAsync(templateNew);
+        return Result.Success();
     }
 
     /// <summary>
@@ -65,15 +68,16 @@ public class TemplateService
     /// </summary>
     /// <param name="id">id удаляемого шаблона</param>
     /// <exception cref="EntityNotFoundException">если шаблона с переданным id не существует</exception>
-    public async Task DeleteTemplate(int id)
+    public async Task<Result> DeleteTemplate(int id)
     {
         var template = await _templateRepository.GetAsync(id);
         if (template == null)
         {
-            throw new EntityNotFoundException("Template with given id cannot be found");
+            return new EntityNotFoundException("Template with given id cannot be found");
         }
         
         await _templateRepository.RemoveAsync(id);
+        return Result.Success();
     }
 
     /// <summary>
@@ -81,7 +85,7 @@ public class TemplateService
     /// </summary>
     /// <remarks>В частности выдает пути к файлам шаблона и превью, которые фронтенд может у себя отобразить</remarks>
     /// <returns>список информации обо всех существующих шаблонах</returns>
-    public async Task<List<TemplateDto>> GetTemplates()
+    public async Task<Result<List<TemplateDto>>> GetTemplates()
     {
         var templates = await _templateRepository.GetAllAsync();
         return templates.ConvertAll(t => t.ToDto());
@@ -93,12 +97,12 @@ public class TemplateService
     /// <param name="id">ID выбранного шаблона</param>
     /// <returns>информация о выбранном шаблоне</returns>
     /// <exception cref="EntityNotFoundException">если шаблона с переданным id не существует</exception>
-    public async Task<TemplateDto> GetTemplateDetails(int id)
+    public async Task<Result<TemplateDto>> GetTemplateDetails(int id)
     {
         var template = await _templateRepository.GetAsync(id);
         if (template == null)
         {
-            throw new EntityNotFoundException("Template with given id cannot be found");
+            return new EntityNotFoundException("Template with given id cannot be found");
         }
 
         return template.ToDto();

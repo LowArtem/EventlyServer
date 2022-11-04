@@ -36,16 +36,13 @@ public class AuthController : BaseApiController
     [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<UserShortDto>> Register([FromBody] UserRegisterDto user)
     {
-        return await this.SendResponseAsync(async () =>
-        {
-            var token = await _userService.Register(user, false);
-            var email = TokenService.GetLoginFromToken(token);
+        var token = await _userService.Register(user, false);
+        if (!token.IsSuccess) return BadRequest(token.Exception.Message);
+            
+        var email = TokenService.GetLoginFromToken(token.Value);
 
-            if (email == null) throw new ArgumentException("Incorrect token generated");
-
-            var created = await _userService.GetUserByEmail(email);
-            return created.ToShortDto(token);
-        });
+        var created = await _userService.GetUserByEmail(email!);
+        return created.ToResponse(u => u.ToShortDto(token.Value));
     }
 
     /// <summary>
@@ -70,10 +67,8 @@ public class AuthController : BaseApiController
     [ProducesResponseType(typeof(Nullable) ,StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult> AddNewAdmin([FromBody] UserRegisterDto user)
     {
-        return await this.SendResponseAsync(async () =>
-        {
-            await _userService.Register(user, true);
-        });
+        var data = await _userService.Register(user, true);
+        return data.ConvertToEmptyResult().ToResponse();
     }
 
     /// <summary>
@@ -91,15 +86,12 @@ public class AuthController : BaseApiController
     [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<UserShortDto>> Login([FromBody] UserLoginDto user)
     {
-        return await this.SendResponseAsync(async () =>
-        {
-            var token = await _userService.Login(user.Email, user.Password);
-            var email = TokenService.GetLoginFromToken(token);
+        var token = await _userService.Login(user.Email, user.Password);
+        if (!token.IsSuccess) return BadRequest(token.Exception.Message);
 
-            if (email == null) throw new ArgumentException("Incorrect token generated");
+        var email = TokenService.GetLoginFromToken(token.Value);
 
-            var logged = await _userService.GetUserByEmail(email);
-            return logged.ToShortDto(token);
-        });
+        var logged = await _userService.GetUserByEmail(email!);
+        return logged.ToResponse(u => u.ToShortDto(token.Value));
     }
 }

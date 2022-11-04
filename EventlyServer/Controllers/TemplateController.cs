@@ -32,7 +32,8 @@ public class TemplateController : BaseApiController
     [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<List<TemplateDto>>> GetAllTemplates()
     {
-        return await this.SendResponseAsync(async () => await _templateService.GetTemplates());
+        var data = await _templateService.GetTemplates();
+        return data.ToResponse();
     }
 
     /// <summary>
@@ -50,7 +51,8 @@ public class TemplateController : BaseApiController
     [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult<TemplateDto>> GetTemplateDetails([FromRoute] int id)
     {
-        return await this.SendResponseAsync(async () => await _templateService.GetTemplateDetails(id));
+        var data = await _templateService.GetTemplateDetails(id);
+        return data.ToResponse();
     }
 
     /// <summary>
@@ -75,7 +77,8 @@ public class TemplateController : BaseApiController
     [ProducesResponseType(typeof(Nullable) ,StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult> AddNewTemplate([FromBody] TemplateCreatingDto template)
     {
-        return await this.SendResponseAsync(async () => await _templateService.AddTemplate(template));
+        var data = await _templateService.AddTemplate(template);
+        return data.ToResponse();
     }
 
     /// <summary>
@@ -100,6 +103,7 @@ public class TemplateController : BaseApiController
     [ProducesResponseType(typeof(Nullable) ,StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult> DeleteTemplate([FromRoute] int id)
     {
-        return await this.SendResponseAsync(async () => await _templateService.DeleteTemplate(id));
+        var data = await _templateService.DeleteTemplate(id);
+        return data.ToResponse();
     }
 }

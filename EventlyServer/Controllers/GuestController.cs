@@ -37,7 +37,8 @@ public class GuestController : BaseApiController
     [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult> TakeInvitation([FromBody] GuestFullCreatingDto guest)
     {
-        return await this.SendResponseAsync(async () => await _guestService.TakeInvitation(guest));
+        var data = await _guestService.TakeInvitation(guest);
+        return data.ToResponse();
     }
 
     /// <summary>
@@ -59,6 +60,7 @@ public class GuestController : BaseApiController
     [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult> DeleteGuest([FromRoute] int id)
     {
-        return await this.SendResponseAsync(async () => await _guestService.DeleteGuest(id));
+        var data = await _guestService.DeleteGuest(id);
+        return data.ToResponse();
     }
 }

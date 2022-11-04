@@ -39,7 +39,8 @@ public class InvitationController : BaseApiController
     [ProducesResponseType(typeof(Nullable), StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult> OrderInvitation([FromBody] LandingInvitationCreatingDto invitation)
     {
-        return await this.SendResponseAsync(async () => await _landingInvitationService.AddInvitation(invitation));
+        var data = await _landingInvitationService.AddInvitation(invitation);
+        return data.ToResponse();
     }
 
     /// <summary>
@@ -63,7 +64,8 @@ public class InvitationController : BaseApiController
     [ProducesResponseType(typeof(Nullable) ,StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<LandingInvitationDto>> GetInvitationDetails([FromRoute] int id)
     {
-        return await this.SendResponseAsync(async () => await _landingInvitationService.GetInvitationDetails(id));
+        var data = await _landingInvitationService.GetInvitationDetails(id);
+        return data.ToResponse();
     }
 
     /// <summary>
@@ -84,12 +86,8 @@ public class InvitationController : BaseApiController
     [ProducesResponseType(typeof(Nullable) ,StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<List<LandingInvitationShortDto>>> GetAllUsersInvitations()
     {
-        return await this.SendResponseAsync(async () =>
-        {
-            var id = UserId.IsSuccess ? UserId.Value : throw UserId.Exception;
-            
-            return await _landingInvitationService.GetInvitationsByUserId(id);
-        });
+        var data = await _landingInvitationService.GetInvitationsByUserId(UserId);
+        return data.ToResponse();
     }
 
     /// <summary>
@@ -114,7 +112,8 @@ public class InvitationController : BaseApiController
     [ProducesResponseType(typeof(Nullable) ,StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<List<LandingInvitationShortDto>>> GetAllUsersInvitationsById([FromRoute] int clientId)
     {
-        return await this.SendResponseAsync(async () => await _landingInvitationService.GetInvitationsByUserId(clientId));
+        var data = await _landingInvitationService.GetInvitationsByUserId(clientId);
+        return data.ToResponse();
     }
 
     /// <summary>
@@ -139,8 +138,8 @@ public class InvitationController : BaseApiController
     [ProducesResponseType(typeof(Nullable) ,StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult> EditInvitation([FromBody] LandingInvitationUpdatingDto newInvitation)
     {
-        return await this.SendResponseAsync(async () =>
-            await _landingInvitationService.UpdateInvitation(newInvitation));
+        var data = await _landingInvitationService.UpdateInvitation(newInvitation);
+        return data.ToResponse();
     }
 
     /// <summary>
@@ -165,6 +164,7 @@ public class InvitationController : BaseApiController
     [ProducesResponseType(typeof(Nullable) ,StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult> DeleteInvitation([FromRoute] int id)
     {
-        return await this.SendResponseAsync(async () => await _landingInvitationService.DeleteInvitation(id));
+        var data = await _landingInvitationService.DeleteInvitation(id);
+        return data.ToResponse();
     }
 }

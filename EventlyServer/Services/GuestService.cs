@@ -3,6 +3,7 @@ using EventlyServer.Data.Entities;
 using EventlyServer.Data.Mappers;
 using EventlyServer.Data.Repositories.Abstracts;
 using EventlyServer.Exceptions;
+using EventlyServer.Extensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace EventlyServer.Services;
@@ -27,21 +28,26 @@ public class GuestService
     /// <param name="guest">информаци о госте</param>
     /// <exception cref="EntityNotFoundException">если мероприятия с переданным id не существует</exception>
     /// <exception cref="EntityExistsException">если гость с таким номером телефона уже зарегистрировался на мероприятие</exception>
-    public async Task TakeInvitation(GuestFullCreatingDto guest)
+    public async Task<Result> TakeInvitation(GuestFullCreatingDto guest)
     {
-        var invitation = await _invitationRepository.Items.FirstOrDefaultAsync(i => i.Id == guest.IdInvitation);
-        if (invitation == null)
-        {
-            throw new EntityNotFoundException("Invitation with given id cannot be found");
-        }
-
         try
         {
+            var invitation = await _invitationRepository.Items.FirstOrDefaultAsync(i => i.Id == guest.IdInvitation);
+            if (invitation == null)
+            {
+                return new EntityNotFoundException("Invitation with given id cannot be found");
+            }
+            
             await _guestRepository.AddAsync(guest.ToGuest());
+            return Result.Success();
         }
         catch (DbUpdateException e)
         {
-            throw new EntityExistsException(e.Message);
+            return new EntityExistsException(e.Message);
+        }
+        catch (Exception e)
+        {
+            return e;
         }
     }
 
@@ -50,14 +56,22 @@ public class GuestService
     /// </summary>
     /// <param name="guestId">ID удаляемого гостя</param>
     /// <exception cref="EntityNotFoundException">если гость с переданным id не существует</exception>
-    public async Task DeleteGuest(int guestId)
+    public async Task<Result> DeleteGuest(int guestId)
     {
-        var guest = await _guestRepository.GetAsync(guestId);
-        if (guest == null)
+        try
         {
-            throw new EntityNotFoundException("Guest with given id cannot be found");
-        }
+            var guest = await _guestRepository.GetAsync(guestId);
+            if (guest == null)
+            {
+                return new EntityNotFoundException("Guest with given id cannot be found");
+            }
         
-        await _guestRepository.RemoveAsync(guestId);
+            await _guestRepository.RemoveAsync(guestId);
+            return Result.Success();
+        }
+        catch (Exception e)
+        {
+            return e;
+        }
     }
 }

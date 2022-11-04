@@ -36,10 +36,6 @@ public class TestController : BaseApiController
     [Authorize]
     public ActionResult<string> GetCurrentUserEmail()
     {
-        return this.SendResponse(() =>
-        {
-            var login = UserEmail.IsSuccess ? UserEmail.Value : throw UserEmail.Exception;
-            return login;
-        });
+        return UserEmail.ToResponse();
     }
 }

@@ -36,7 +36,8 @@ public class AccountController : BaseApiController
     [ProducesResponseType(typeof(Nullable), StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult<List<UserDto>>> GetUsers()
     {
-        return await this.SendResponseAsync(async () => await _userService.GetAllUsers());
+        var data = await _userService.GetAllUsers();
+        return data.ToResponse();
     }
 
     /// <summary>
@@ -61,7 +62,8 @@ public class AccountController : BaseApiController
     [ProducesResponseType(typeof(Nullable), StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult> EditUserAccount([FromBody] UserUpdateDto user)
     {
-        return await this.SendResponseAsync(async () => await _userService.UpdateUser(user));
+        var data = await _userService.UpdateUser(user);
+        return data.ToResponse();
     }
 
     /// <summary>
@@ -86,6 +88,7 @@ public class AccountController : BaseApiController
     [ProducesResponseType(typeof(Nullable), StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult> DeleteUserAccount([FromRoute] int id)
     {
-        return await this.SendResponseAsync(async () => await _userService.DeleteUser(id));
+        var data = await _userService.DeleteUser(id);
+        return data.ToResponse();
     }
 }
