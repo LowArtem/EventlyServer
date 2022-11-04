@@ -27,6 +27,7 @@ public class AuthController : BaseApiController
     /// <param name="user">Данные клиента</param>
     /// <returns>Базовая информация об аккаунте клиента</returns>
     /// <response code="200">Базовая информация о созданном аккаунте</response>
+    /// <response code="400">Неверный формат данных (email или телефон)</response>
     /// <response code="409">Пользователь с таким email уже существует</response>
     /// <response code="500">Ошибка при создании пользователя</response>
     [HttpPost]
@@ -54,6 +55,7 @@ public class AuthController : BaseApiController
     /// Требуется авторизация администратора
     /// </remarks>
     /// <response code="200">Администратор успешно добавлен</response>
+    /// <response code="400">Неверный формат данных (email или телефон)</response>
     /// <response code="409">Пользователь с таким email уже существует</response>
     /// <response code="500">Неизвестная ошибка сервера (вероятнее БД)</response>
     /// <response code="401">Ошибка авторизации</response>

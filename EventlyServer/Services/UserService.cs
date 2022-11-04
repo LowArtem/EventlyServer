@@ -1,4 +1,5 @@
-﻿using EventlyServer.Data.Dto;
+﻿using System.ComponentModel.DataAnnotations;
+using EventlyServer.Data.Dto;
 using EventlyServer.Data.Entities;
 using EventlyServer.Data.Mappers;
 using EventlyServer.Data.Repositories.Abstracts;
@@ -43,12 +44,23 @@ public class UserService
     /// <param name="isAdmin">является ли пользователь администратором</param>
     /// <returns>JWT-токен для данного пользователя</returns>
     /// <exception cref="EntityExistsException">если пользователь с таким имейлом уже существует</exception>
+    /// <exception cref="ValidationException">если email или телефон имеют неверный формат</exception>
     public async Task<Result<string>> Register(UserRegisterDto user, bool isAdmin)
     {
         var testUser = await _userRepository.Items.FirstOrDefaultAsync(item => item.Email == user.Email);
         if (testUser != null)
         {
             return new EntityExistsException("User with this email already exists");
+        }
+
+        if (!user.Email.ValidateAsEmail())
+        {
+            return new ValidationException($"Given email ({user.Email}) has incorrect format");
+        }
+
+        if (!user.PhoneNumber?.ValidateAsPhoneNumber() ?? false)
+        {
+            return new ValidationException($"Given phone number ({user.PhoneNumber}) has incorrect format");
         }
 
         var registeredUser = await _userRepository.AddAsync(user.ToUser(isAdmin));

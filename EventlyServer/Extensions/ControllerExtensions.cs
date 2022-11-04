@@ -1,4 +1,5 @@
-﻿using System.Security.Authentication;
+﻿using System.ComponentModel.DataAnnotations;
+using System.Security.Authentication;
 using EventlyServer.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,6 +19,7 @@ public static class ControllerExtensions
             EntityExistsException => new ConflictObjectResult(result.Exception.Message),
             EntityNotFoundException => new BadRequestObjectResult(result.Exception.Message),
             ArgumentNullException => new BadRequestObjectResult(result.Exception.Message),
+            ValidationException => new BadRequestObjectResult(result.Exception.Message),
             AuthenticationException => new UnauthorizedObjectResult(result.Exception.Message),
             _ => new ContentResult { StatusCode = 500, Content = result.Exception.Message }
         };
@@ -37,6 +39,7 @@ public static class ControllerExtensions
             EntityExistsException => new ConflictObjectResult(result.Exception.Message),
             EntityNotFoundException => new BadRequestObjectResult(result.Exception.Message),
             ArgumentNullException => new BadRequestObjectResult(result.Exception.Message),
+            ValidationException => new BadRequestObjectResult(result.Exception.Message),
             AuthenticationException => new UnauthorizedObjectResult(result.Exception.Message),
             _ => new ContentResult { StatusCode = 500, Content = result.Exception.Message }
         };
@@ -54,6 +57,7 @@ public static class ControllerExtensions
             EntityExistsException => new ConflictObjectResult(result.Exception.Message),
             EntityNotFoundException => new BadRequestObjectResult(result.Exception.Message),
             ArgumentNullException => new BadRequestObjectResult(result.Exception.Message),
+            ValidationException => new BadRequestObjectResult(result.Exception.Message),
             AuthenticationException => new UnauthorizedObjectResult(result.Exception.Message),
             _ => new ContentResult { StatusCode = 500, Content = result.Exception.Message }
         };
