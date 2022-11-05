@@ -61,16 +61,16 @@ public record TemplateUpdateDto
     /// <param name="id">ID шаблона</param>
     /// <param name="price">Цена</param>
     /// <param name="name">Название</param>
-    /// <param name="event">Тип мероприятия</param>
+    /// <param name="idEvent">ID типа мероприятия</param>
     /// <param name="filePath">Путь к html-файлу шаблона</param>
     /// <param name="previewPath">Путь к изображению - превью шаблона</param>
-    public TemplateUpdateDto(int id, int? price = null, string? name = null, TypesOfEventDto? @event = null,
+    public TemplateUpdateDto(int id, int? price = null, string? name = null, int? idEvent = null,
         string? filePath = null, string? previewPath = null)
     {
         Id = id;
         Price = price;
         Name = name;
-        Event = @event;
+        IdEvent = idEvent;
         FilePath = filePath;
         PreviewPath = previewPath;
     }
@@ -85,8 +85,8 @@ public record TemplateUpdateDto
     /// <summary>Название</summary>
     public string? Name { get; init; }
 
-    /// <summary>Тип мероприятия</summary>
-    public TypesOfEventDto? Event { get; init; }
+    /// <summary>ID типа мероприятия</summary>
+    public int? IdEvent { get; init; }
 
     /// <summary>Путь к html-файлу шаблона</summary>
     public string? FilePath { get; init; }
@@ -105,14 +105,14 @@ public record TemplateCreatingDto
     /// </summary>
     /// <param name="price">Цена</param>
     /// <param name="name">Название</param>
-    /// <param name="event">Тип мероприятия</param>
+    /// <param name="idEvent">ID типа мероприятия</param>
     /// <param name="filePath">Путь к html-файлу шаблона</param>
     /// <param name="previewPath">Путь к изображению - превью шаблона</param>
-    public TemplateCreatingDto(int price, string name, TypesOfEventDto @event, string filePath, string previewPath)
+    public TemplateCreatingDto(int price, string name, int idEvent, string filePath, string previewPath)
     {
         Price = price;
         Name = name;
-        Event = @event;
+        IdEvent = idEvent;
         FilePath = filePath;
         PreviewPath = previewPath;
     }
@@ -123,8 +123,8 @@ public record TemplateCreatingDto
     /// <summary>Название</summary>
     public string Name { get; init; }
 
-    /// <summary>Тип мероприятия</summary>
-    public TypesOfEventDto Event { get; init; }
+    /// <summary>ID типа мероприятия</summary>
+    public int IdEvent { get; init; }
 
     /// <summary>Путь к html-файлу шаблона</summary>
     public string FilePath { get; init; }

@@ -3,6 +3,7 @@ using EventlyServer.Data.Repositories;
 using EventlyServer.Data;
 using EventlyServer.Services;
 using EventlyServer.Services.Security;
+using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -38,6 +39,7 @@ public static class Program
                 };
             });
 
+        builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
         builder.Services.AddDbContext<InHolidayContext>();
         builder.Services.AddRepositories();
         builder.Services.AddServices();
