@@ -53,16 +53,6 @@ public class UserService
             return new EntityExistsException("User with this email already exists");
         }
 
-        if (!user.Email.ValidateAsEmail())
-        {
-            return new ValidationException($"Given email ({user.Email}) has incorrect format");
-        }
-
-        if (!user.PhoneNumber?.ValidateAsPhoneNumber() ?? false)
-        {
-            return new ValidationException($"Given phone number ({user.PhoneNumber}) has incorrect format");
-        }
-
         var registeredUser = await _userRepository.AddAsync(user.ToUser(isAdmin));
         return await _tokenService.GenerateTokenAsync(registeredUser.Email, registeredUser.Password);
     }

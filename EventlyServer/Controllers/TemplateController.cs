@@ -3,6 +3,7 @@ using EventlyServer.Data.Dto;
 using EventlyServer.Extensions;
 using EventlyServer.Services;
 using EventlyServer.Services.Security;
+using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,10 +15,12 @@ namespace EventlyServer.Controllers;
 public class TemplateController : BaseApiController
 {
     private readonly TemplateService _templateService;
+    private readonly IValidator<TemplateCreatingDto> _validator;
 
-    public TemplateController(TemplateService templateService)
+    public TemplateController(TemplateService templateService, IValidator<TemplateCreatingDto> validator)
     {
         _templateService = templateService;
+        _validator = validator;
     }
 
     /// <summary>
@@ -64,6 +67,7 @@ public class TemplateController : BaseApiController
     /// Требуется авторизация администратора
     /// </remarks>
     /// <response code="200">Шаблон создан успешно</response>
+    /// <response code="400">Данные не прошли валидацию</response>
     /// <response code="409">Шаблон с таким именем уже существует</response>
     /// <response code="500">Неизвестная ошибка сервера (вероятнее БД)</response>
     /// <response code="401">Ошибка авторизации</response>
@@ -72,11 +76,16 @@ public class TemplateController : BaseApiController
     [Route("")]
     [Authorize(Roles = nameof(UserRoles.ADMIN))]
     [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(string), StatusCodes.Status409Conflict)]
     [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(typeof(Nullable) ,StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult> AddNewTemplate([FromBody] TemplateCreatingDto template)
     {
+        var validationResult = await _validator.ValidateAsync(template);
+        if (!validationResult.IsValid)
+            return validationResult.ToResult().ToResponse();
+        
         var data = await _templateService.AddTemplate(template);
         return data.ToResponse();
     }

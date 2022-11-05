@@ -1,5 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations;
-using EventlyServer.Data.Dto;
+﻿using EventlyServer.Data.Dto;
 using EventlyServer.Data.Entities;
 using EventlyServer.Data.Mappers;
 using EventlyServer.Data.Repositories.Abstracts;
@@ -37,11 +36,6 @@ public class GuestService
             if (invitation == null)
             {
                 return new EntityNotFoundException("Invitation with given id cannot be found");
-            }
-
-            if (!guest.PhoneNumber.ValidateAsPhoneNumber())
-            {
-                return new ValidationException($"Given phone number ({guest.PhoneNumber}) has incorrect format");
             }
             
             await _guestRepository.AddAsync(guest.ToGuest());

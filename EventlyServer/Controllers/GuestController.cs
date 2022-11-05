@@ -3,6 +3,7 @@ using EventlyServer.Data.Dto;
 using EventlyServer.Extensions;
 using EventlyServer.Services;
 using EventlyServer.Services.Security;
+using FluentValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,10 +15,12 @@ namespace EventlyServer.Controllers;
 public class GuestController : BaseApiController
 {
     private readonly GuestService _guestService;
+    private readonly IValidator<GuestFullCreatingDto> _validator;
 
-    public GuestController(GuestService guestService)
+    public GuestController(GuestService guestService, IValidator<GuestFullCreatingDto> validator)
     {
         _guestService = guestService;
+        _validator = validator;
     }
 
     /// <summary>
@@ -26,7 +29,7 @@ public class GuestController : BaseApiController
     /// <param name="guest">Данные гостя</param>
     /// <returns>Код статуса</returns>
     /// <response code="200">Приглашение принято</response>
-    /// <response code="400">Приглашения с таким ID не существует</response>
+    /// <response code="400">Данные не прошли валидацию или приглашения с таким ID не существует</response>
     /// <response code="409">Гость с таким номером телефона уже принял данное приглашение</response>
     /// <response code="500">Неизвестная ошибка сервера (вероятнее БД)</response>
     [HttpPost]
@@ -37,6 +40,10 @@ public class GuestController : BaseApiController
     [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult> TakeInvitation([FromBody] GuestFullCreatingDto guest)
     {
+        var validationResult = await _validator.ValidateAsync(guest);
+        if (!validationResult.IsValid)
+            return validationResult.ToResult().ToResponse();
+        
         var data = await _guestService.TakeInvitation(guest);
         return data.ToResponse();
     }
