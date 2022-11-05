@@ -54,7 +54,7 @@ public class TemplateService
             id: updated.Id,
             price: updated.Price ?? templateOld.Price,
             name: updated.Name ?? templateOld.Name,
-            idTypeOfEvent: updated.Event?.Id ?? templateOld.IdTypeOfEvent,
+            idTypeOfEvent: updated.IdEvent ?? templateOld.IdTypeOfEvent,
             filePath: updated.FilePath ?? templateOld.FilePath,
             previewPath: updated.PreviewPath ?? templateOld.PreviewPath
         );

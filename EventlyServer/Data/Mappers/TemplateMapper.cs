@@ -12,5 +12,5 @@ public static class TemplateMapper
         new Template(templateDto.Price, templateDto.Name, templateDto.Event.Id, templateDto.FilePath, templateDto.PreviewPath);
     
     public static Template ToTemplate(this TemplateCreatingDto templateDto) =>
-        new Template(templateDto.Price, templateDto.Name, templateDto.Event.Id, templateDto.FilePath, templateDto.PreviewPath);
+        new Template(templateDto.Price, templateDto.Name, templateDto.IdEvent, templateDto.FilePath, templateDto.PreviewPath);
 }
