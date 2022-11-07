@@ -50,7 +50,7 @@ public class UserService
         var testUser = await _userRepository.Items.FirstOrDefaultAsync(item => item.Email == user.Email);
         if (testUser != null)
         {
-            return new EntityExistsException("User with this email already exists");
+            return new EntityExistsException(nameof(user), user.Email);
         }
 
         var registeredUser = await _userRepository.AddAsync(user.ToUser(isAdmin));
@@ -78,7 +78,7 @@ public class UserService
     {
         var user = await _userRepository.GetAsync(id);
         if (user == null)
-            return new EntityNotFoundException($"User with given id ({id}) cannot be found");
+            return new EntityNotFoundException(nameof(user), id);
         
         return user;
     }
@@ -123,7 +123,7 @@ public class UserService
         var userOld = await _userRepository.GetAsync(newUser.Id);
         if (userOld == null)
         {
-            return new EntityNotFoundException("User with given id cannot be found");
+            return new EntityNotFoundException(nameof(userOld), newUser.Id);
         }
 
         User updating = new User(
@@ -150,7 +150,7 @@ public class UserService
         var user = await _userRepository.GetAsync(id);
         if (user == null)
         {
-            return new EntityNotFoundException("User with given id cannot be found");
+            return new EntityNotFoundException(nameof(user), id);
         }
 
         await _userRepository.RemoveAsync(id);

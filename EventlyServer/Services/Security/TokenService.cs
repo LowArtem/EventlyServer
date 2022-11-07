@@ -34,7 +34,7 @@ public class TokenService
         var identity = await GetIdentityAsync(login, password);
         if (identity == null)
         {
-            return new EntityNotFoundException("User with these credentials cannot be found");
+            return new EntityNotFoundException(nameof(User), login);
         }
  
         var now = DateTime.UtcNow;
@@ -74,7 +74,7 @@ public class TokenService
         var user = await _userRepository.Items.FirstOrDefaultAsync(u => u.Email == login);
         if (user == null)
         {
-            return new EntityNotFoundException("User with given email cannot be found");
+            return new EntityNotFoundException(nameof(user), login);
         }
 
         return user;

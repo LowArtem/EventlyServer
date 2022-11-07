@@ -40,7 +40,7 @@ public class TypesOfEventService
         var testTypes = await _typesOfEventRepository.Items.FirstOrDefaultAsync(t => t.Name == name);
         if (testTypes != null)
         {
-            return new EntityExistsException("Type of event with this name already exists");
+            return new EntityExistsException(nameof(TypesOfEvent), name);
         }
         
         await _typesOfEventRepository.AddAsync(new TypesOfEvent(name));
@@ -59,13 +59,13 @@ public class TypesOfEventService
         var type = await _typesOfEventRepository.GetAsync(id);
         if (type == null)
         {
-            return new EntityNotFoundException("Type of event with given id cannot be found");
+            return new EntityNotFoundException(nameof(type), id);
         }
         
         var testTypes = await _typesOfEventRepository.Items.FirstOrDefaultAsync(t => t.Name == newName);
         if (testTypes != null)
         {
-            return new EntityExistsException("Type of event with this name already exists");
+            return new EntityExistsException(nameof(type), newName);
         }
         type.Name = newName;
         
@@ -83,7 +83,7 @@ public class TypesOfEventService
         var type = await _typesOfEventRepository.GetAsync(id);
         if (type == null)
         {
-            return new EntityNotFoundException("Type of event with given id cannot be found");
+            return new EntityNotFoundException(nameof(type), id);
         }
 
         await _typesOfEventRepository.RemoveAsync(id);

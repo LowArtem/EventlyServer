@@ -30,7 +30,7 @@ public class TemplateService
         var templateTest = await _templateRepository.Items.SingleOrDefaultAsync(t => t.Name == template.Name);
         if (templateTest != null)
         {
-            return new EntityExistsException("Template with this name already exists");
+            return new EntityExistsException(nameof(template), template.Name);
         }
 
         await _templateRepository.AddAsync(template.ToTemplate());
@@ -47,7 +47,7 @@ public class TemplateService
         var templateOld = await _templateRepository.GetAsync(updated.Id);
         if (templateOld == null)
         {
-            return new EntityNotFoundException("Template with given id cannot be found");
+            return new EntityNotFoundException(nameof(templateOld), updated.Id);
         }
 
         Template templateNew = new Template(
@@ -73,7 +73,7 @@ public class TemplateService
         var template = await _templateRepository.GetAsync(id);
         if (template == null)
         {
-            return new EntityNotFoundException("Template with given id cannot be found");
+            return new EntityNotFoundException(nameof(template), id);
         }
         
         await _templateRepository.RemoveAsync(id);
@@ -102,7 +102,7 @@ public class TemplateService
         var template = await _templateRepository.GetAsync(id);
         if (template == null)
         {
-            return new EntityNotFoundException("Template with given id cannot be found");
+            return new EntityNotFoundException(nameof(template), id);
         }
 
         return template.ToDto();

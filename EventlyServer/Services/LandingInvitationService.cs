@@ -35,7 +35,7 @@ public class LandingInvitationService
         var user = await _userRepository.GetAsync(id.Value);
         if (user == null)
         {
-            return new EntityNotFoundException("User with given id cannot be found");
+            return new EntityNotFoundException(nameof(user), id);
         }
         
         return user.LandingInvitations.ConvertAll(i => i.ToShortDto());
@@ -52,7 +52,7 @@ public class LandingInvitationService
         var invitation = await _landingInvitationRepository.GetAsync(id);
         if (invitation == null)
         {
-            return new EntityNotFoundException("Invitation with given id cannot be found");
+            return new EntityNotFoundException(nameof(invitation), id);
         }
 
         return invitation.ToDto();
@@ -78,7 +78,7 @@ public class LandingInvitationService
         var invitationOld = await _landingInvitationRepository.GetAsync(invitationInfo.Id);
         if (invitationOld == null)
         {
-            return new EntityNotFoundException("Invitation with given id cannot be found");
+            return new EntityNotFoundException(nameof(invitationInfo), invitationInfo.Id);
         }
 
         var invitationNew = new LandingInvitation(
@@ -106,7 +106,7 @@ public class LandingInvitationService
         var invitation = await _landingInvitationRepository.GetAsync(id);
         if (invitation == null)
         {
-            return new EntityNotFoundException("Invitation with given id cannot be found");
+            return new EntityNotFoundException(nameof(invitation), id);
         }
         
         await _landingInvitationRepository.RemoveAsync(id);

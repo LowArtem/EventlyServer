@@ -5,7 +5,13 @@
 /// </summary>
 public class EntityNotFoundException : Exception
 {
-    public EntityNotFoundException(string? message) : base(message)
+    /// <summary>
+    /// Создание исключения
+    /// </summary>
+    /// <param name="name">Название сущности</param>
+    /// <param name="key">Конфликтующее значение</param>
+    public EntityNotFoundException(string name, object? key)
+        : base($"Entity <{name}> ({key ?? "null"}) not found")
     {
     }
 }

@@ -35,7 +35,7 @@ public class GuestService
             var invitation = await _invitationRepository.Items.FirstOrDefaultAsync(i => i.Id == guest.IdInvitation);
             if (invitation == null)
             {
-                return new EntityNotFoundException("Invitation with given id cannot be found");
+                return new EntityNotFoundException(nameof(invitation), guest.IdInvitation);
             }
             
             await _guestRepository.AddAsync(guest.ToGuest());
@@ -43,7 +43,7 @@ public class GuestService
         }
         catch (DbUpdateException e)
         {
-            return new EntityExistsException(e.Message);
+            return new EntityExistsException(nameof(LandingInvitation), guest.PhoneNumber);
         }
         catch (Exception e)
         {
@@ -63,7 +63,7 @@ public class GuestService
             var guest = await _guestRepository.GetAsync(guestId);
             if (guest == null)
             {
-                return new EntityNotFoundException("Guest with given id cannot be found");
+                return new EntityNotFoundException(nameof(guest), guestId);
             }
         
             await _guestRepository.RemoveAsync(guestId);

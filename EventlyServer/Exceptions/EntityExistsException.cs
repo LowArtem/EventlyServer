@@ -5,7 +5,13 @@
 /// </summary>
 public class EntityExistsException : Exception
 {
-    public EntityExistsException(string? message) : base(message)
+    /// <summary>
+    /// Создание исключения
+    /// </summary>
+    /// <param name="name">Название сущности</param>
+    /// <param name="key">Конфликтующее значение</param>
+    public EntityExistsException(string name, object? key)
+        : base($"Entity <{name}> ({key ?? "null"}) already exists")
     {
     }
 }
