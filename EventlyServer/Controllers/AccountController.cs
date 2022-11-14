@@ -49,7 +49,7 @@ public class AccountController : BaseApiController
     /// <param name="user">Обновленная информация</param>
     /// <returns>Код статуса</returns>
     /// <remarks>
-    /// Требуется авторизация администратора
+    /// Требуется авторизация пользователя
     /// </remarks>
     /// <response code="200">Аккаунт успешно изменен</response>
     /// <response code="400">Данные не прошли валидацию или пользователя с таким ID не существует</response>
@@ -58,7 +58,7 @@ public class AccountController : BaseApiController
     /// <response code="403">Нет доступа</response>
     [HttpPut]
     [Route("")]
-    [Authorize(Roles = nameof(UserRoles.ADMIN))]
+    [Authorize(Roles = nameof(UserRoles.USER))]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
