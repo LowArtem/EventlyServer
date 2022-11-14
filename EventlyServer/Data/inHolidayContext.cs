@@ -35,7 +35,7 @@ public class InHolidayContext : DbContext
             if (pgHost == null || pgPort == null || pgUser == null || pgPass == null || pgDb == null)
                 throw new ArgumentNullException(nameof(pgHost), "One of db config params is null");
             
-            string connStr = $"Server={pgHost};Port={pgPort};User Id={pgUser};Password={pgPass};Database={pgDb};SSL Mode=Require;Trust Server Certificate=True;";
+            string connStr = $"Server={pgHost};Port={pgPort};User Id={pgUser};Password={pgPass};Database={pgDb};";
             optionsBuilder.UseNpgsql(connStr);
 
             // Localhost
