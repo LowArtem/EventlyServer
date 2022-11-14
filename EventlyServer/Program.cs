@@ -20,6 +20,7 @@ public static class Program
 
         // Add services to the container.
 
+        builder.Services.AddLogging();
         builder.Services.Configure<RouteOptions>(o => o.LowercaseUrls = true);
         builder.Services.AddAuthorization();
         builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -97,7 +98,9 @@ public static class Program
         builder.Services.AddSwaggerGenNewtonsoftSupport();
 
         var app = builder.Build();
-
+        
+        app.Logger.LogInformation("Built successfully");
+        
         // Configure the HTTP request pipeline.
         if (app.Environment.IsDevelopment())
         {
