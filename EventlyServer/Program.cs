@@ -136,8 +136,8 @@ public static class Program
                 });
             }
 
-            app.UseHttpsRedirection();
-            app.UseHsts();
+            // app.UseHttpsRedirection();
+            // app.UseHsts();
             
             app.UseForwardedHeaders(new ForwardedHeadersOptions {
                 ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
