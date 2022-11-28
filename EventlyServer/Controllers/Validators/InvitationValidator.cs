@@ -9,7 +9,6 @@ public class InvitationCreatingValidator : AbstractValidator<LandingInvitationCr
     public InvitationCreatingValidator()
     {
         RuleFor(x => x.Name).NotEmpty().MaximumLength(100);
-        RuleFor(x => x.IdClient).NotEmpty().GreaterThan(0);
         RuleFor(x => x.IdTemplate).NotEmpty().GreaterThan(0);
         RuleFor(x => x.StartDate).NotEmpty().GreaterThan(DateTime.Today);
         RuleFor(x => x.FinishDate)

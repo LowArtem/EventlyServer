@@ -22,11 +22,11 @@ public static class LandingInvitationMapper
             landingInvitation.OrderStatus
         );
 
-    public static LandingInvitation ToLandingInvitation(this LandingInvitationCreatingDto dto) =>
+    public static LandingInvitation ToLandingInvitation(this LandingInvitationCreatingDto dto, int idClient) =>
         new LandingInvitation(
             dto.Name,
             DateOnly.FromDateTime(dto.StartDate),
             DateOnly.FromDateTime(dto.FinishDate), dto.IdTemplate,
-            dto.IdClient
+            idClient
         );
 }

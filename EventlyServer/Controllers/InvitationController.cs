@@ -51,8 +51,11 @@ public class InvitationController : BaseApiController
         var validationResult = await _creatingValidator.ValidateAsync(invitation);
         if (!validationResult.IsValid)
             return validationResult.ToResult().ToResponse();
+
+        if (!UserId.IsSuccess)
+            return UserId.ConvertToEmptyResult().ToResponse();
         
-        var data = await _landingInvitationService.AddInvitation(invitation);
+        var data = await _landingInvitationService.AddInvitation(invitation, UserId.Value);
         return data.ToResponse();
     }
 
