@@ -47,6 +47,8 @@ jobs:
           DATABASE_USER: ihuser
           DATABASE_PASSWORD: ihuserpassword
           DATABASE_NAME: inholidaydb
+          AUTH_SECRET_KEY: "PdSgUkXp2s5v8y/B?E(H+MbQeThWmYq3t6w9z$C&F)J@NcRfUjXn2r4u7x!A%D*G-KaPdSgVkYp3s6v8y/B?E(H+MbQeThWmZq4t7w!z$C&F)J@NcRfUjXn2r5u8x/A?D*G-KaPdSgVkYp3s6v9y$B&E)H@MbQeThWmZq4t7w!z%C*F-JaNdRfUjXn2r5u8x/A?D(G+KbPeShVkYp3s6v9y$B&E)H@McQfTjWnZq4t7w!z%C*F-JaNdRgUkXp2s5"
+          ASPNETCORE_URLS: "http://*:5000;"
         run: dotnet test --configuration Release --no-build --verbosity normal
 
   build:
