@@ -20,7 +20,7 @@ public static class InitDatabase
 
         if (!TableExists("landing_invitations", connStr))
         {
-            string script = await File.ReadAllTextAsync(@"../../../../../../init.sql");
+            string script = await File.ReadAllTextAsync(@"../../../../init.sql");
 
             await using var dataSource = NpgsqlDataSource.Create(connStr);
             await using var command = dataSource.CreateCommand(script);
