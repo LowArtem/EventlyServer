@@ -11,6 +11,8 @@ public class Startup
 {
     public void ConfigureServices(IServiceCollection services)
     {
+        InitDatabase.RunScript().Wait();
+
         services.AddDbContext<InHolidayContext>();
         services.AddScoped<GuestService>();
         services.AddScoped<IRepository<Guest>, DbRepository<Guest>>();
