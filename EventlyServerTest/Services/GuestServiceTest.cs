@@ -2,6 +2,7 @@
 using EventlyServer.Data.Entities;
 using EventlyServer.Data.Mappers;
 using EventlyServer.Data.Repositories.Abstracts;
+using EventlyServer.Exceptions;
 using EventlyServer.Services;
 using Microsoft.EntityFrameworkCore;
 
@@ -70,6 +71,9 @@ public class GuestServiceTest : IDisposable
         GuestFullCreatingDto guestCreatingDto = new GuestFullCreatingDto("Akakiy Sidorov", "11111111111", idInvitation);
         _guestService.TakeInvitation(guestCreatingDto).Wait();
 
-        await Assert.ThrowsAsync<DbUpdateException>(() => _guestService.TakeInvitation(guestCreatingDto));
+        var result = await _guestService.TakeInvitation(guestCreatingDto);
+        
+        Assert.False(result.IsSuccess);
+        Assert.True(result.ExceptionIs<EntityExistsException>());
     }
 }
