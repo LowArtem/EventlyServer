@@ -68,7 +68,7 @@ public class GuestServiceTest : IDisposable
         var idInvitation = _invitationRepository.Items.SingleOrDefault()!.Id;
         
         GuestFullCreatingDto guestCreatingDto = new GuestFullCreatingDto("Akakiy Sidorov", "11111111111", idInvitation);
-        await _guestService.TakeInvitation(guestCreatingDto);
+        _guestService.TakeInvitation(guestCreatingDto).Wait();
 
         await Assert.ThrowsAsync<DbUpdateException>(() => _guestService.TakeInvitation(guestCreatingDto));
     }
