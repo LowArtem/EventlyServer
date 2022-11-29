@@ -42,7 +42,7 @@ jobs:
 
       - name: Test
         env:
-          DATABASE_HOST: postgres
+          DATABASE_HOST: localhost
           DATABASE_PORT: 5432
           DATABASE_USER: ihuser
           DATABASE_PASSWORD: ihuserpassword
