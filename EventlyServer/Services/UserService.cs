@@ -117,17 +117,18 @@ public class UserService
     /// Редактировать информаци о пользователе
     /// </summary>
     /// <param name="newUser">обновленная информация о пользователе</param>
+    /// <param name="userId">ID пользователя</param>
     /// <exception cref="EntityNotFoundException">если пользователь с переданным ID не существует</exception>
-    public async Task<Result> UpdateUser(UserUpdateDto newUser)
+    public async Task<Result> UpdateUser(UserUpdateDto newUser, int userId)
     {
-        var userOld = await _userRepository.GetAsync(newUser.Id);
+        var userOld = await _userRepository.GetAsync(userId);
         if (userOld == null)
         {
-            return new EntityNotFoundException(nameof(userOld), newUser.Id);
+            return new EntityNotFoundException(nameof(userOld), userId);
         }
 
         User updating = new User(
-            id: newUser.Id,
+            id: userId,
             name: newUser.Name ?? userOld.Name,
             email: userOld.Email,
             password: newUser.Password ?? userOld.Password,

@@ -34,7 +34,6 @@ public class UserUpdateValidator : AbstractValidator<UserUpdateDto>
 {
     public UserUpdateValidator()
     {
-        RuleFor(x => x.Id).NotEmpty().GreaterThan(0);
         RuleFor(x => x.PhoneNumber)
             .Must(x => x!.ValidateAsPhoneNumber())
             .When(x => x.PhoneNumber != null);

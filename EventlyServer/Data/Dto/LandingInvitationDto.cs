@@ -119,14 +119,12 @@ public record LandingInvitationCreatingDto
     /// <param name="startDate">Дата начала работы готового лендинга-приглашения</param>
     /// <param name="finishDate">Дата окончания работы готового лендинга-приглашения</param>
     /// <param name="idTemplate">ID выбранного шаблона</param>
-    /// <param name="idClient">ID клиента, заказывающего приглашение (текущий пользователь)</param>
-    public LandingInvitationCreatingDto(string name, DateTime startDate, DateTime finishDate, int idTemplate, int idClient)
+    public LandingInvitationCreatingDto(string name, DateTime startDate, DateTime finishDate, int idTemplate)
     {
         Name = name;
         StartDate = startDate;
         FinishDate = finishDate;
         IdTemplate = idTemplate;
-        IdClient = idClient;
     }
 
     /// <summary>Название приглашения (видимое и создаваемое пользователем)</summary>
@@ -144,10 +142,6 @@ public record LandingInvitationCreatingDto
     /// <summary>ID выбранного шаблона</summary>
     [Required]
     public int IdTemplate { get; init; }
-
-    /// <summary>ID клиента, заказывающего приглашение (текущий пользователь)</summary>
-    [Required]
-    public int IdClient { get; init; }
 }
 
 /// <summary>

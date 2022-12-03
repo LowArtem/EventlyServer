@@ -58,7 +58,7 @@ public class AccountController : BaseApiController
     /// <response code="403">Нет доступа</response>
     [HttpPut]
     [Route("")]
-    [Authorize(Roles = nameof(UserRoles.USER))]
+    [Authorize(Roles = nameof(UserRoles.USER) + "," + nameof(UserRoles.ADMIN))]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
@@ -68,8 +68,11 @@ public class AccountController : BaseApiController
         var validationResult = await _validator.ValidateAsync(user);
         if (!validationResult.IsValid)
             return validationResult.ToResult().ToResponse();
+
+        if (!UserId.IsSuccess)
+            return UserId.ConvertToEmptyResult().ToResponse();
         
-        var data = await _userService.UpdateUser(user);
+        var data = await _userService.UpdateUser(user, UserId.Value);
         return data.ToResponse();
     }
 

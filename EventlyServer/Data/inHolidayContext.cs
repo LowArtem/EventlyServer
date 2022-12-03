@@ -25,26 +25,19 @@ public class InHolidayContext : DbContext
     {
         if (!optionsBuilder.IsConfigured)
         {
-            // Heroku
-            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+            // Docker
+            var pgHost = Environment.GetEnvironmentVariable("DATABASE_HOST");
+            var pgPort = Environment.GetEnvironmentVariable("DATABASE_PORT");
+            var pgUser = Environment.GetEnvironmentVariable("DATABASE_USER");
+            var pgPass = Environment.GetEnvironmentVariable("DATABASE_PASSWORD");
+            var pgDb = Environment.GetEnvironmentVariable("DATABASE_NAME");
+
+            if (pgHost == null || pgPort == null || pgUser == null || pgPass == null || pgDb == null)
+                throw new ArgumentNullException(nameof(pgHost), "One of db config params is null");
             
-            string connUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
-
-            connUrl = connUrl.Replace("postgres://", string.Empty);
-
-            string pgHostPortDb = connUrl.Split("@")[1];
-            string pgUserPass = connUrl.Split("@")[0];
-            string pgHostPort = pgHostPortDb.Split("/")[0];
-
-            string pgDb = pgHostPortDb.Split("/")[1];
-            string pgUser = pgUserPass.Split(":")[0];
-            string pgPass = pgUserPass.Split(":")[1];
-            string pgHost = pgHostPort.Split(":")[0];
-            string pgPort = pgHostPort.Split(":")[1];
-
-            string connStr = $"Server={pgHost};Port={pgPort};User Id={pgUser};Password={pgPass};Database={pgDb};SSL Mode=Require;Trust Server Certificate=True;";
+            string connStr = $"Server={pgHost};Port={pgPort};User Id={pgUser};Password={pgPass};Database={pgDb};";
             optionsBuilder.UseNpgsql(connStr);
-            
+
             // Localhost
             // optionsBuilder.UseNpgsql("Host=localhost;Database=inHoliday;Username=postgres;Password=root");
         }

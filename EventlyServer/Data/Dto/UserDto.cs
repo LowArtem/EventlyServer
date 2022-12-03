@@ -103,7 +103,7 @@ public record UserShortDto
 /// Пользовательский аккаунт (информация для обновления)
 /// </summary>
 /// <remarks>
-/// Все поля, кроме ID, необязательны для заполнения - их нужно заполнять, если нужно обновить значение.
+/// Все поля необязательны для заполнения - их нужно заполнять, если нужно обновить значение.
 ///<para></para>
 /// Если нужно оставить значение без изменения - передать null (исключение: поле OtherCommunication - оставить
 /// без изменений - передать пустую строку)
@@ -113,24 +113,18 @@ public record UserUpdateDto
     /// <summary>
     /// Пользовательский аккаунт (информация для обновления)
     /// </summary>
-    /// <param name="id">ID пользователя</param>
     /// <param name="name">Имя пользователя</param>
     /// <param name="password">Пароль</param>
     /// <param name="phoneNumber">Номер телефона</param>
     /// <param name="otherCommunication">Иные контакты (ссылки на соцсети, например)</param>
-    public UserUpdateDto([Required] int id, string? name = null, string? password = null, string? phoneNumber = null,
+    public UserUpdateDto(string? name = null, string? password = null, string? phoneNumber = null,
         string? otherCommunication = "")
     {
-        Id = id;
         Name = name;
         Password = password;
         PhoneNumber = phoneNumber;
         OtherCommunication = otherCommunication;
     }
-
-    /// <summary>ID пользователя</summary>
-    [Required]
-    public int Id { get; init; }
 
     /// <summary>Имя пользователя</summary>
     public string? Name { get; init; }

@@ -62,9 +62,10 @@ public class LandingInvitationService
     /// Добавить приглашение
     /// </summary>
     /// <param name="invitationInfo">информация о приглашении</param>
-    public async Task<Result> AddInvitation(LandingInvitationCreatingDto invitationInfo)
+    /// <param name="idClient">ID клиента, осуществляющего заказ</param>
+    public async Task<Result> AddInvitation(LandingInvitationCreatingDto invitationInfo, int idClient)
     {
-        await _landingInvitationRepository.AddAsync(invitationInfo.ToLandingInvitation());
+        await _landingInvitationRepository.AddAsync(invitationInfo.ToLandingInvitation(idClient));
         return Result.Success();
     }
 
