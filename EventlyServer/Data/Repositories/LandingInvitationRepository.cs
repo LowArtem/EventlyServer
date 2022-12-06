@@ -10,5 +10,7 @@ public class LandingInvitationRepository : DbRepository<LandingInvitation>
     {
     }
 
-    public override IQueryable<LandingInvitation> Items => base.Items.Include(item => item.Guests);
+    public override IQueryable<LandingInvitation> Items => base.Items
+        .Include(item => item.Guests)
+        .Include(item => item.ChosenTemplate.ChosenTypeOfEvent);
 }

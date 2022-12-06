@@ -1,10 +1,12 @@
 using System.Reflection;
 using EventlyServer.Data.Repositories;
 using EventlyServer.Data;
+using EventlyServer.Extensions;
 using EventlyServer.Services;
 using EventlyServer.Services.Security;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -55,12 +57,16 @@ public static class Program
                     };
                 });
 
+            builder.Services.AddCors();
+
             builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
             builder.Services.AddDbContext<InHolidayContext>();
             builder.Services.AddRepositories();
             builder.Services.AddServices();
             builder.Services.AddControllers();
 
+            // builder.Services.AddAntiforgery(options => { options.HeaderName = "x-xsrf-token"; });
+            
             builder.Services.AddMvcCore().AddNewtonsoftJson(o =>
             {
                 o.SerializerSettings.Converters.Add(new StringEnumConverter());
@@ -136,14 +142,52 @@ public static class Program
                 });
             }
 
+            // TODO: заменить * на фактический адрес клиента
+            
+            app.UseCors(o => o
+                .WithOrigins("http://localhost")
+                .AllowCredentials()
+                .AllowAnyMethod()
+                .AllowAnyHeader());
+
+            app.UseCookiePolicy(new CookiePolicyOptions
+            {
+                MinimumSameSitePolicy = SameSiteMode.Strict,
+                HttpOnly = HttpOnlyPolicy.Always,
+                Secure = CookieSecurePolicy.Always
+            });
+
             // app.UseHttpsRedirection();
             // app.UseHsts();
             
             app.UseForwardedHeaders(new ForwardedHeadersOptions {
                 ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
             });
+            
+            // Middleware подстановки токена из куки
+            app.Use(async (context, next) =>
+            {
+                var token = context.Request.Cookies[Constants.COOKIE_ID];
+                if (!string.IsNullOrEmpty(token) && !context.Request.Headers.ContainsKey("Authorization"))
+                    context.Request.Headers.Add("Authorization", "Bearer " + token);
+ 
+                await next();
+            });
+            
+            // Middleware добавление заголовков в ответ
+            app.Use(async (context, next) =>
+            {
+                context.Response.Headers.Add("X-Content-Type-Options", "nosniff");
+                context.Response.Headers.Add("X-Xss-Protection", "1");
+                context.Response.Headers.Add("X-Frame-Options", "DENY");
+                
+                await next();
+            });
 
             app.UseAuthentication();
+            
+            // app.UseXsrfProtection();
+            
             app.UseAuthorization();
 
 

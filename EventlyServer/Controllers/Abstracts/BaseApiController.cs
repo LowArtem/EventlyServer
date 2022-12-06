@@ -13,6 +13,7 @@ namespace EventlyServer.Controllers.Abstracts;
 [Route("api/[controller]")]
 [Produces(MediaTypeNames.Application.Json)]
 [Consumes(MediaTypeNames.Application.Json)]
+// [AutoValidateAntiforgeryToken]
 public class BaseApiController : ControllerBase
 {
     /// <summary>
