@@ -175,4 +175,12 @@ public class AuthController : BaseApiController
             MaxAge = TimeSpan.FromMinutes(AuthOptions.LIFETIME)
         });
     }
+
+    private void AppendAuthCookies(string token)
+    {
+        HttpContext.Response.Cookies.Append(Constants.COOKIE_ID, token, new CookieOptions
+        {
+            MaxAge = TimeSpan.FromMinutes(AuthOptions.LIFETIME)
+        });
+    }
 }
