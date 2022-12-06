@@ -14,8 +14,10 @@ public class Startup
         InitDatabase.RunScript().Wait();
 
         services.AddDbContext<InHolidayContext>();
-        services.AddScoped<GuestService>();
         services.AddScoped<IRepository<Guest>, DbRepository<Guest>>();
         services.AddScoped<IRepository<LandingInvitation>, LandingInvitationRepository>();
+        services.AddScoped<IRepository<User>, UserRepository>();
+        services.AddScoped<GuestService>();
+        services.AddScoped<LandingInvitationService>();
     }
 }
