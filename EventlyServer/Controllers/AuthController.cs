@@ -19,7 +19,8 @@ public class AuthController : BaseApiController
     private readonly IValidator<UserRegisterDto> _registerValidator;
     private readonly IValidator<UserLoginDto> _loginValidator;
 
-    public AuthController(UserService userService, IValidator<UserRegisterDto> registerValidator, IValidator<UserLoginDto> loginValidator)
+    public AuthController(UserService userService, IValidator<UserRegisterDto> registerValidator,
+        IValidator<UserLoginDto> loginValidator)
     {
         _userService = userService;
         _registerValidator = registerValidator;
@@ -46,13 +47,16 @@ public class AuthController : BaseApiController
         var validationResult = await _registerValidator.ValidateAsync(user);
         if (!validationResult.IsValid)
             return validationResult.ToResult().ToResponse();
-        
+
         var token = await _userService.Register(user, false);
         if (!token.IsSuccess) return BadRequest(token.Exception.Message);
-            
+
         var email = TokenService.GetLoginFromToken(token.Value);
 
         var created = await _userService.GetUserByEmail(email!);
+
+        AppendAuthCookies(token.Value);
+
         return created.ToResponse(u => u.ToShortDto(token.Value));
     }
 
@@ -77,13 +81,13 @@ public class AuthController : BaseApiController
     [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(string), StatusCodes.Status409Conflict)]
     [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
-    [ProducesResponseType(typeof(Nullable) ,StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(Nullable), StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult> AddNewAdmin([FromBody] UserRegisterDto user)
     {
         var validationResult = await _registerValidator.ValidateAsync(user);
         if (!validationResult.IsValid)
             return validationResult.ToResult().ToResponse();
-        
+
         var data = await _userService.Register(user, true);
         return data.ConvertToEmptyResult().ToResponse();
     }
@@ -106,13 +110,24 @@ public class AuthController : BaseApiController
         var validationResult = await _loginValidator.ValidateAsync(user);
         if (!validationResult.IsValid)
             return validationResult.ToResult().ToResponse();
-        
+
         var token = await _userService.Login(user.Email, user.Password);
         if (!token.IsSuccess) return BadRequest(token.Exception.Message);
 
         var email = TokenService.GetLoginFromToken(token.Value);
 
         var logged = await _userService.GetUserByEmail(email!);
+
+        AppendAuthCookies(token.Value);
+
         return logged.ToResponse(u => u.ToShortDto(token.Value));
+    }
+
+    private void AppendAuthCookies(string token)
+    {
+        HttpContext.Response.Cookies.Append(Constants.COOKIE_ID, token, new CookieOptions
+        {
+            MaxAge = TimeSpan.FromMinutes(AuthOptions.LIFETIME)
+        });
     }
 }

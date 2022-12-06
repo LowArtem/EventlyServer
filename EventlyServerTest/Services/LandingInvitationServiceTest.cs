@@ -9,6 +9,7 @@ public class LandingInvitationServiceTest : IDisposable
     private readonly LandingInvitationService _invitationService;
     private readonly IRepository<LandingInvitation> _invitationRepository;
 
+    private int _invitationId = 0;
 
     public LandingInvitationServiceTest(LandingInvitationService invitationService, IRepository<LandingInvitation> invitationRepository)
     {
@@ -21,27 +22,23 @@ public class LandingInvitationServiceTest : IDisposable
     private void Setup()
     {
         var invitation = new LandingInvitation(
-            "Invitation",
+            "Invitation 2",
             DateOnly.FromDateTime(DateTime.Today),
             DateOnly.FromDateTime(DateTime.Today).AddDays(7), 1, 1
         );
-        _invitationRepository.Add(invitation);
+        var created = _invitationRepository.Add(invitation);
+        _invitationId = created.Id;
     }
     
     public void Dispose()
     {
-        var invitation = _invitationRepository.Items.SingleOrDefault();
-        _invitationRepository.Remove(invitation.Id);
+        _invitationRepository.Remove(_invitationId);
     }
 
     [Fact]
     public async Task GetInvitationDetails_Test()
     {
-        var invitation = _invitationRepository.Items.SingleOrDefault();
-        
-        Assert.NotNull(invitation);
-
-        var result = await _invitationService.GetInvitationDetails(invitation!.Id);
+        var result = await _invitationService.GetInvitationDetails(_invitationId);
         
         Assert.True(result.IsSuccess);
         Assert.NotNull(result.Value!.Template);
