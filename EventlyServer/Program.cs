@@ -154,7 +154,7 @@ public static class Program
             {
                 MinimumSameSitePolicy = SameSiteMode.Strict,
                 HttpOnly = HttpOnlyPolicy.Always,
-                Secure = CookieSecurePolicy.Always
+                Secure = CookieSecurePolicy.SameAsRequest
             });
 
             // app.UseHttpsRedirection();
