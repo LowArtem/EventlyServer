@@ -123,6 +123,28 @@ public class AuthController : BaseApiController
         return logged.ToResponse(u => u.ToShortDto());
     }
 
+    /// <summary>
+    /// Выход из аккаунта
+    /// </summary>
+    /// <remarks>
+    /// Требуется авторизация пользователя или администратора
+    /// </remarks>
+    /// <returns>Код статуса</returns>
+    /// <response code="200">Выход успешно осуществлен</response>
+    /// <response code="401">Ошибка авторизации</response>
+    /// <response code="500">Неизвестная ошибка сервера</response>
+    [HttpGet]
+    [Route("logout")]
+    [Authorize(Roles = nameof(UserRoles.USER) + "," + nameof(UserRoles.ADMIN))]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(typeof(Nullable), StatusCodes.Status401Unauthorized)]
+    public ActionResult Logout()
+    {
+        HttpContext.Response.Cookies.Delete(Constants.COOKIE_ID);
+        return Ok();
+    }
+
     private void AppendAuthCookies(string token)
     {
         HttpContext.Response.Cookies.Append(Constants.COOKIE_ID, token, new CookieOptions

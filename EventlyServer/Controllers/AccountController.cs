@@ -81,7 +81,7 @@ public class AccountController : BaseApiController
     /// </summary>
     /// <param name="id">ID удаляемого пользователя</param>
     /// <returns>Код статуса</returns>
-    /// /// <remarks>
+    /// <remarks>
     /// Требуется авторизация администратора
     /// </remarks>
     /// <response code="200">Аккаунт успешно удален</response>
