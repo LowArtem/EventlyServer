@@ -57,7 +57,7 @@ public class AuthController : BaseApiController
 
         AppendAuthCookies(token.Value);
 
-        return created.ToResponse(u => u.ToShortDto(token.Value));
+        return created.ToResponse(u => u.ToShortDto());
     }
 
     /// <summary>
@@ -120,7 +120,7 @@ public class AuthController : BaseApiController
 
         AppendAuthCookies(token.Value);
 
-        return logged.ToResponse(u => u.ToShortDto(token.Value));
+        return logged.ToResponse(u => u.ToShortDto());
     }
 
     private void AppendAuthCookies(string token)

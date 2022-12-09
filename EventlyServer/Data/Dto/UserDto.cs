@@ -66,15 +66,12 @@ public record UserShortDto
     /// <param name="id">ID пользователя</param>
     /// <param name="name">Имя пользователя</param>
     /// <param name="email">Электронная почта</param>
-    /// <param name="token">JWT-токен аутентификации</param>
     /// <param name="isAdmin">Является ли пользователь администратором</param>
-    public UserShortDto([Required] int id, [Required] string name, [Required] string email, [Required] string token,
-        [Required] bool isAdmin)
+    public UserShortDto([Required] int id, [Required] string name, [Required] string email, [Required] bool isAdmin)
     {
         Id = id;
         Name = name;
         Email = email;
-        Token = token;
         IsAdmin = isAdmin;
     }
 
@@ -89,10 +86,6 @@ public record UserShortDto
     /// <summary>Электронная почта</summary>
     [Required]
     public string Email { get; init; }
-
-    /// <summary>JWT-токен аутентификации</summary>
-    [Required]
-    public string Token { get; init; }
 
     /// <summary>Является ли пользователь администратором</summary>
     [Required]
