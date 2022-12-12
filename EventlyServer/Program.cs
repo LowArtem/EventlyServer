@@ -145,8 +145,7 @@ public static class Program
             // TODO: заменить * на фактический адрес клиента
             
             app.UseCors(o => o
-                .WithOrigins("http://localhost")
-                .AllowCredentials()
+                .AllowAnyOrigin()
                 .AllowAnyMethod()
                 .AllowAnyHeader());
 
