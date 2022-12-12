@@ -16,4 +16,7 @@ public static class UserMapper
 
     public static User ToUser(this UserRegisterDto dto, bool isAdmin) =>
         new User(dto.Name, dto.Email, dto.Password, dto.PhoneNumber, dto.OtherCommunication, isAdmin);
+
+    public static UserSecretDto ToSecretDto(this User user) =>
+        new UserSecretDto(user.Id, user.Name, user.Email, user.PhoneNumber, user.OtherCommunication, user.IsAdmin);
 }

@@ -56,6 +56,53 @@ public record UserDto
 }
 
 /// <summary>
+/// Пользовательский аккаунт (без скрытой информации)
+/// </summary>
+public record UserSecretDto
+{
+    /// <summary>
+    /// Пользовательский аккаунт
+    /// </summary>
+    /// <param name="id">ID пользователя</param>
+    /// <param name="name">Имя пользователя</param>
+    /// <param name="email">Электронная почта</param>
+    /// <param name="phoneNumber">Номер телефона</param>
+    /// <param name="otherCommunication">Иные контакты (ссылки на соцсети, например)</param>
+    /// <param name="isAdmin">Является ли пользователь администратором</param>
+    public UserSecretDto([Required] int id, [Required] string name, [Required] string email, string? phoneNumber,
+        string? otherCommunication = null, bool isAdmin = false)
+    {
+        Id = id;
+        Name = name;
+        Email = email;
+        PhoneNumber = phoneNumber;
+        OtherCommunication = otherCommunication;
+        IsAdmin = isAdmin;
+    }
+
+    /// <summary>ID пользователя</summary>
+    [Required]
+    public int Id { get; init; }
+
+    /// <summary>Имя пользователя</summary>
+    [Required]
+    public string Name { get; init; }
+
+    /// <summary>Электронная почта</summary>
+    [Required]
+    public string Email { get; init; }
+
+    /// <summary>Номер телефона</summary>
+    public string? PhoneNumber { get; init; }
+
+    /// <summary>Иные контакты (ссылки на соцсети, например)</summary>
+    public string? OtherCommunication { get; init; }
+
+    /// <summary>Является ли пользователь администратором</summary>
+    public bool IsAdmin { get; init; }
+}
+
+/// <summary>
 /// Пользовательский аккаунт (базовая информация)
 /// </summary>
 public record UserShortDto

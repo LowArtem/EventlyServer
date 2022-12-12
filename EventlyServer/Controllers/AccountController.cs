@@ -1,5 +1,6 @@
 ﻿using EventlyServer.Controllers.Abstracts;
 using EventlyServer.Data.Dto;
+using EventlyServer.Data.Mappers;
 using EventlyServer.Extensions;
 using EventlyServer.Services;
 using EventlyServer.Services.Security;
@@ -32,7 +33,7 @@ public class AccountController : BaseApiController
     /// <response code="401">Ошибка авторизации</response>
     /// <response code="403">Нет доступа</response>
     [HttpGet]
-    [Route("")]
+    [Route("all")]
     [Authorize(Roles = nameof(UserRoles.ADMIN))]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
@@ -41,6 +42,31 @@ public class AccountController : BaseApiController
     {
         var data = await _userService.GetAllUsers();
         return data.ToResponse();
+    }
+
+    /// <summary>
+    /// Получить информацию о текущем пользователе
+    /// </summary>
+    /// <returns>Информация о текущем пользователе</returns>
+    /// <remarks>
+    /// Требуется авторизация пользователя или администратора
+    /// </remarks>
+    /// <response code="200">Информация о текущем пользователе</response>
+    /// <response code="500">Неизвестная ошибка сервера (вероятнее БД)</response>
+    /// <response code="401">Ошибка авторизации</response>
+    [HttpGet]
+    [Route("")]
+    [Authorize(Roles = nameof(UserRoles.USER) + "," + nameof(UserRoles.ADMIN))]
+    [ProducesResponseType(typeof(UserSecretDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
+    [ProducesResponseType(typeof(Nullable), StatusCodes.Status401Unauthorized)]
+    public async Task<ActionResult<UserSecretDto>> GetUser()
+    {
+        if (!UserId.IsSuccess)
+            return UserId.ConvertToEmptyResult().ToResponse();
+
+        var user = await _userService.GetUserById(UserId.Value);
+        return user.ToResponse(u => u.ToSecretDto());
     }
 
     /// <summary>
