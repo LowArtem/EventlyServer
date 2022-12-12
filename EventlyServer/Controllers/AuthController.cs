@@ -49,7 +49,7 @@ public class AuthController : BaseApiController
             return validationResult.ToResult().ToResponse();
 
         var token = await _userService.Register(user, false);
-        if (!token.IsSuccess) return BadRequest(token.Exception.Message);
+        if (!token.IsSuccess) return token.ConvertToEmptyResult().ToResponse();
 
         var email = TokenService.GetLoginFromToken(token.Value);
 
@@ -112,7 +112,7 @@ public class AuthController : BaseApiController
             return validationResult.ToResult().ToResponse();
 
         var token = await _userService.Login(user.Email, user.Password);
-        if (!token.IsSuccess) return BadRequest(token.Exception.Message);
+        if (!token.IsSuccess) return token.ConvertToEmptyResult().ToResponse();
 
         var email = TokenService.GetLoginFromToken(token.Value);
 
