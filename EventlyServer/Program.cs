@@ -152,7 +152,7 @@ public static class Program
 
             app.UseCookiePolicy(new CookiePolicyOptions
             {
-                MinimumSameSitePolicy = SameSiteMode.None,
+                MinimumSameSitePolicy = SameSiteMode.Strict,
                 HttpOnly = HttpOnlyPolicy.Always,
                 Secure = CookieSecurePolicy.SameAsRequest
             });
