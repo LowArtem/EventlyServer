@@ -30,11 +30,12 @@ public class UserService
     /// </summary>
     /// <param name="email">имейл пользователя</param>
     /// <param name="password">пароль пользователя</param>
+    /// <param name="isForDevelopment">если true - генерирует действительный на год токен для локальной разработки</param>
     /// <returns>JWT-токен для данного пользователя</returns>
     /// <exception cref="EntityNotFoundException">если пользователь с такими учетными данными не обнаружен</exception>
-    public async Task<Result<string>> Login(string email, string password)
+    public async Task<Result<string>> Login(string email, string password, bool isForDevelopment = false)
     {
-        return await _tokenService.GenerateTokenAsync(email, password);
+        return await _tokenService.GenerateTokenAsync(email, password, isForDevelopment);
     }
 
     /// <summary>

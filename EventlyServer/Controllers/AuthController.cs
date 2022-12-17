@@ -99,7 +99,7 @@ public class AuthController : BaseApiController
     /// <returns>Базовая информация об аккаунте клиента</returns>
     /// <response code="200">Базовая информация об аккаунте</response>
     /// <response code="400">Данные не прошли валидацию или пользователь с такими учетными данными не существует</response>
-    /// <response code="500">Ошибка при получении пользователя</response>
+    /// <response code="500">Неизвестная ошибка сервера</response>
     [HttpPost]
     [Route("login")]
     [ProducesResponseType(typeof(UserShortDto), StatusCodes.Status200OK)]
@@ -121,6 +121,29 @@ public class AuthController : BaseApiController
         AppendAuthCookies(token.Value);
 
         return logged.ToResponse(u => u.ToShortDto());
+    }
+
+    /// <summary>
+    /// Получить долгоживущий токен для локальной разработки
+    /// </summary>
+    /// <param name="user">Данные аккаунта</param>
+    /// <returns>JWT токен авторизации</returns>
+    /// <response code="200">JWT токен авторизации</response>
+    /// <response code="400">Данные не прошли валидацию или пользователь с такими учетными данными не существует</response>
+    /// <response code="500">Неизвестная ошибка сервера</response>
+    [HttpPost]
+    [Route("/dev/token")]
+    [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
+    public async Task<ActionResult<string>> GetDevelopmentToken([FromBody] UserLoginDto user)
+    {
+        var validationResult = await _loginValidator.ValidateAsync(user);
+        if (!validationResult.IsValid)
+            return validationResult.ToResult().ToResponse();
+
+        var token = await _userService.Login(user.Email, user.Password, true);
+        return token.ToResponse();
     }
 
     /// <summary>

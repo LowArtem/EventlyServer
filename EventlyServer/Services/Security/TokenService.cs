@@ -27,9 +27,10 @@ public class TokenService
     /// </summary>
     /// <param name="login">имейл пользователя</param>
     /// <param name="password">пароль пользователя</param>
+    /// <param name="isForDevelopment">если true - генерирует действительный на год токен для локальной разработки</param>
     /// <returns>сгенерированный токен</returns>
     /// <exception cref="EntityNotFoundException">если пользователь с такими учетными данными не обнаружен</exception>
-    public async Task<Result<string>> GenerateTokenAsync(string login, string password)
+    public async Task<Result<string>> GenerateTokenAsync(string login, string password, bool isForDevelopment = false)
     {
         var identity = await GetIdentityAsync(login, password);
         if (identity == null)
@@ -44,7 +45,7 @@ public class TokenService
             audience: AuthOptions.AUDIENCE,
             notBefore: now,
             claims: identity.Claims,
-            expires: now.Add(TimeSpan.FromMinutes(AuthOptions.LIFETIME)),
+            expires: !isForDevelopment ? now.Add(TimeSpan.FromMinutes(AuthOptions.LIFETIME)) : now.Add(TimeSpan.FromDays(365)),
             signingCredentials: new SigningCredentials(AuthOptions.GetSymmetricSecurityKey(), SecurityAlgorithms.HmacSha256));
         
         return new JwtSecurityTokenHandler().WriteToken(jwt);
