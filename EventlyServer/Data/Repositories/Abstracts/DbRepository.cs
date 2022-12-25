@@ -74,7 +74,7 @@ public class DbRepository<T> : IRepository<T> where T : Entity, new()
     /// <returns>полученный объект (или null)</returns>
     public T? Get(long id)
     {
-        return Items.SingleOrDefault(item => item.Id == id);
+        return Items.AsNoTracking().SingleOrDefault(item => item.Id == id);
     }
 
     /// <summary>
@@ -83,7 +83,7 @@ public class DbRepository<T> : IRepository<T> where T : Entity, new()
     /// <returns>полный список данных</returns>
     public List<T> GetAll()
     {
-        return Items.ToList();
+        return Items.AsNoTracking().ToList();
     }
 
     /// <summary>
@@ -94,7 +94,7 @@ public class DbRepository<T> : IRepository<T> where T : Entity, new()
     /// <returns>полученный объект (или null)</returns>
     public async Task<T?> GetAsync(long id, CancellationToken cancel = default)
     {
-        return await Items.SingleOrDefaultAsync(item => item.Id == id, cancel).ConfigureAwait(false);
+        return await Items.AsNoTracking().SingleOrDefaultAsync(item => item.Id == id, cancel).ConfigureAwait(false);
     }
 
     /// <summary>
@@ -103,7 +103,7 @@ public class DbRepository<T> : IRepository<T> where T : Entity, new()
     /// <returns>полный список данных</returns>
     public async Task<List<T>> GetAllAsync()
     {
-        return await Items.ToListAsync();
+        return await Items.AsNoTracking().ToListAsync();
     }
 
     /// <summary>
@@ -168,7 +168,7 @@ public class DbRepository<T> : IRepository<T> where T : Entity, new()
 
         _context.Entry(item).State = EntityState.Modified;
         if (AutoSaveChanges)
-            await _context.SaveChangesAsync().ConfigureAwait(false);
+            await _context.SaveChangesAsync(cancel).ConfigureAwait(false);
     }
 
     /// <summary>
