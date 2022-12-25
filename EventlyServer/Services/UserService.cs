@@ -122,7 +122,7 @@ public class UserService
     /// <exception cref="EntityNotFoundException">если пользователь с переданным ID не существует</exception>
     public async Task<Result> UpdateUser(UserUpdateDto newUser, int userId)
     {
-        var userOld = await _userRepository.GetAsync(userId);
+        var userOld = await _userRepository.GetUntrackedAsync(userId);
         if (userOld == null)
         {
             return new EntityNotFoundException(nameof(userOld), userId);

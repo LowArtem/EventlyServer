@@ -74,6 +74,16 @@ public class DbRepository<T> : IRepository<T> where T : Entity, new()
     /// <returns>полученный объект (или null)</returns>
     public T? Get(long id)
     {
+        return Items.SingleOrDefault(item => item.Id == id);
+    }
+    
+    /// <summary>
+    /// Получаем данные без отслеживания
+    /// </summary>
+    /// <param name="id"></param>
+    /// <returns>полученный объект (или null)</returns>
+    public T? GetUntracked(long id)
+    {
         return Items.AsNoTracking().SingleOrDefault(item => item.Id == id);
     }
 
@@ -82,6 +92,15 @@ public class DbRepository<T> : IRepository<T> where T : Entity, new()
     /// </summary>
     /// <returns>полный список данных</returns>
     public List<T> GetAll()
+    {
+        return Items.ToList();
+    }
+    
+    /// <summary>
+    /// Получение полного списка данных без отслеживания
+    /// </summary>
+    /// <returns>полный список данных</returns>
+    public List<T> GetAllUntracked()
     {
         return Items.AsNoTracking().ToList();
     }
@@ -94,6 +113,17 @@ public class DbRepository<T> : IRepository<T> where T : Entity, new()
     /// <returns>полученный объект (или null)</returns>
     public async Task<T?> GetAsync(long id, CancellationToken cancel = default)
     {
+        return await Items.SingleOrDefaultAsync(item => item.Id == id, cancel).ConfigureAwait(false);
+    }
+    
+    /// <summary>
+    /// Получаем данные асинхронно без отслеживания
+    /// </summary>
+    /// <param name="id"></param>
+    /// <param name="cancel">токен отмены</param>
+    /// <returns>полученный объект (или null)</returns>
+    public async Task<T?> GetUntrackedAsync(long id, CancellationToken cancel = default)
+    {
         return await Items.AsNoTracking().SingleOrDefaultAsync(item => item.Id == id, cancel).ConfigureAwait(false);
     }
 
@@ -102,6 +132,15 @@ public class DbRepository<T> : IRepository<T> where T : Entity, new()
     /// </summary>
     /// <returns>полный список данных</returns>
     public async Task<List<T>> GetAllAsync()
+    {
+        return await Items.ToListAsync();
+    }
+    
+    /// <summary>
+    /// Получение полного списка данных асинхронно без отслеживания
+    /// </summary>
+    /// <returns>полный список данных</returns>
+    public async Task<List<T>> GetAllUntrackedAsync()
     {
         return await Items.AsNoTracking().ToListAsync();
     }

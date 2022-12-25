@@ -9,9 +9,13 @@ public interface IRepository<T> where T : Entity, new()
     IQueryable<T> Items { get; }
 
     T? Get(long id);
+    T? GetUntracked(long id);
     List<T> GetAll();
+    List<T> GetAllUntracked();
     Task<T?> GetAsync(long id, CancellationToken cancel = default);
+    Task<T?> GetUntrackedAsync(long id, CancellationToken cancel = default);
     Task<List<T>> GetAllAsync();
+    Task<List<T>> GetAllUntrackedAsync();
 
 
     T Add(T item);
