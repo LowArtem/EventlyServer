@@ -56,7 +56,7 @@ public class TypesOfEventService
     /// <exception cref="EntityExistsException">если мероприятие с таким названием уже существует</exception>
     public async Task<Result> UpdateType(int id, string newName)
     {
-        var type = await _typesOfEventRepository.GetAsync(id);
+        var type = await _typesOfEventRepository.GetUntrackedAsync(id);
         if (type == null)
         {
             return new EntityNotFoundException(nameof(type), id);

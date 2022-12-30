@@ -76,7 +76,7 @@ public class LandingInvitationService
     /// <exception cref="EntityNotFoundException">если приглашения с переданным ID не существует</exception>
     public async Task<Result> UpdateInvitation(LandingInvitationUpdatingDto invitationInfo)
     {
-        var invitationOld = await _landingInvitationRepository.GetAsync(invitationInfo.Id);
+        var invitationOld = await _landingInvitationRepository.GetUntrackedAsync(invitationInfo.Id);
         if (invitationOld == null)
         {
             return new EntityNotFoundException(nameof(invitationInfo), invitationInfo.Id);

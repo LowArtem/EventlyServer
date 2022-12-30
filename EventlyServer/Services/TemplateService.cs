@@ -44,7 +44,7 @@ public class TemplateService
     /// <exception cref="EntityNotFoundException">если шаблона с переданным id не существует</exception>
     public async Task<Result> UpdateTemplate(TemplateUpdateDto updated)
     {
-        var templateOld = await _templateRepository.GetAsync(updated.Id);
+        var templateOld = await _templateRepository.GetUntrackedAsync(updated.Id);
         if (templateOld == null)
         {
             return new EntityNotFoundException(nameof(templateOld), updated.Id);
