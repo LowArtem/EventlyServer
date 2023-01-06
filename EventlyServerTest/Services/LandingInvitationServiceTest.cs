@@ -4,7 +4,7 @@ using EventlyServer.Services;
 
 namespace EventlyServerTest.Services;
 
-public class LandingInvitationServiceTest : IDisposable
+public sealed class LandingInvitationServiceTest : IDisposable
 {
     private readonly LandingInvitationService _invitationService;
     private readonly IRepository<LandingInvitation> _invitationRepository;

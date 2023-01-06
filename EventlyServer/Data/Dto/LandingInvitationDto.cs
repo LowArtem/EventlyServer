@@ -63,7 +63,6 @@ public record LandingInvitationDto
     public string? Link { get; init; }
 }
 
-// TODO: обсудить со стороны фронтенда
 /// <summary>
 /// Заказ приглашения
 /// </summary>
