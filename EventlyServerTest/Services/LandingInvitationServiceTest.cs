@@ -15,7 +15,7 @@ public sealed class LandingInvitationServiceTest : IDisposable
     {
         _invitationService = invitationService;
         _invitationRepository = invitationRepository;
-        
+
         Setup();
     }
 
@@ -29,7 +29,7 @@ public sealed class LandingInvitationServiceTest : IDisposable
         var created = _invitationRepository.Add(invitation);
         _invitationId = created.Id;
     }
-    
+
     public void Dispose()
     {
         _invitationRepository.Remove(_invitationId);
@@ -39,7 +39,7 @@ public sealed class LandingInvitationServiceTest : IDisposable
     public async Task GetInvitationDetails_Test()
     {
         var result = await _invitationService.GetInvitationDetails(_invitationId);
-        
+
         Assert.True(result.IsSuccess);
         Assert.NotNull(result.Value!.Template);
         Assert.NotNull(result.Value!.Template.Name);

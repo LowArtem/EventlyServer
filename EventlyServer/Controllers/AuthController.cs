@@ -21,6 +21,8 @@ public class AuthController : BaseApiController
 
     public AuthController(UserService userService, IValidator<UserRegisterDto> registerValidator,
         IValidator<UserLoginDto> loginValidator)
+    public AuthController(UserService userService, IValidator<UserRegisterDto> registerValidator,
+        IValidator<UserLoginDto> loginValidator)
     {
         _userService = userService;
         _registerValidator = registerValidator;
@@ -47,6 +49,7 @@ public class AuthController : BaseApiController
         var validationResult = await _registerValidator.ValidateAsync(user);
         if (!validationResult.IsValid)
             return validationResult.ToResult().ToResponse();
+
 
         var token = await _userService.Register(user, false);
         if (!token.IsSuccess) return token.ConvertToEmptyResult().ToResponse();
@@ -82,11 +85,13 @@ public class AuthController : BaseApiController
     [ProducesResponseType(typeof(string), StatusCodes.Status409Conflict)]
     [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(typeof(Nullable), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(Nullable), StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult> AddNewAdmin([FromBody] UserRegisterDto user)
     {
         var validationResult = await _registerValidator.ValidateAsync(user);
         if (!validationResult.IsValid)
             return validationResult.ToResult().ToResponse();
+
 
         var data = await _userService.Register(user, true);
         return data.ConvertToEmptyResult().ToResponse();
@@ -110,6 +115,7 @@ public class AuthController : BaseApiController
         var validationResult = await _loginValidator.ValidateAsync(user);
         if (!validationResult.IsValid)
             return validationResult.ToResult().ToResponse();
+
 
         var token = await _userService.Login(user.Email, user.Password);
         if (!token.IsSuccess) return token.ConvertToEmptyResult().ToResponse();
@@ -166,6 +172,14 @@ public class AuthController : BaseApiController
     {
         HttpContext.Response.Cookies.Delete(Constants.COOKIE_ID);
         return Ok();
+    }
+
+    private void AppendAuthCookies(string token)
+    {
+        HttpContext.Response.Cookies.Append(Constants.COOKIE_ID, token, new CookieOptions
+        {
+            MaxAge = TimeSpan.FromMinutes(AuthOptions.LIFETIME)
+        });
     }
 
     private void AppendAuthCookies(string token)
