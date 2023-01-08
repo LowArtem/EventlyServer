@@ -1,0 +1,50 @@
+---
+- name: Deploy server configs
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Load docker-compose file
+      copy:
+        src: docker_compose_prod.yml
+        dist: /app/inHoliday/docker_compose_prod.yml
+        owner: ansible
+        group: ansible
+        mode: u=rw,g=r,o=r
+      notify:
+        - Restart docker-compose
+
+    - name: Load nginx configuration file
+      copy:
+        src: nginx.conf
+        dist: /app/inHoliday/nginx.conf
+        owner: ansible
+        group: ansible
+        mode: u=rw,g=r,o=r
+      notify:
+        - Restart docker-compose
+
+    - name: Load create db script
+      copy:
+        src: InitDb/common/create_tables.sql
+        dist: /app/inHoliday/InitDb/create_tables.sql
+        owner: ansible
+        group: ansible
+        mode: u=rw,g=r,o=r
+      notify:
+        - Restart docker-compose
+
+    - name: Load fill db script
+      copy:
+        src: InitDb/Prod/base_fill.sql
+        dist: /app/inHoliday/InitDb/fill_db.sql
+        owner: ansible
+        group: ansible
+        mode: u=rw,g=r,o=r
+      notify:
+        - Restart docker-compose
+
+  handlers:
+    - name: Restart docker-compose
+      # shell: cd /app/inHoliday && docker stop $(docker ps -a -q) && docker rm $(docker ps -a -q) && docker-compose up -d
+      shell: cd ~/ci_tests && echo "Hello world" >> test.txt

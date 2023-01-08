@@ -1,0 +1,2 @@
+[production]
+affable ansible_host=45.15.159.0 ansible_user=ansible

@@ -1,0 +1,6 @@
+﻿version: '3'
+
+tasks:
+  name:
+    cmds:
+      - cd /app
