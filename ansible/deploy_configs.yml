@@ -6,8 +6,8 @@
   tasks:
     - name: Load docker-compose file
       copy:
-        src: docker_compose_prod.yml
-        dest: /app/inHoliday/docker_compose_prod.yml
+        src: docker-compose-prod.yml
+        dest: /app/inHoliday/docker-compose-prod.yml
         owner: ansible
         group: ansible
         mode: u=rw,g=r,o=r
