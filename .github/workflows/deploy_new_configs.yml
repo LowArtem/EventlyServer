@@ -43,6 +43,7 @@ jobs:
       - uses: ./.github/actions/ansible
         env:
           CI_DEPLOY_SSH_KEY: ${{ secrets.CI_DEPLOY_SSH_KEY }}
+          GITHUB_WORKSPACE: $GITHUB_WORKSPACE
 
 
   # TODO: заменить на ansible по возможности
