@@ -4,6 +4,12 @@
   become: yes
 
   tasks:
+    - name: Create remote folders
+      file:
+        path: /app/inHoliday/InitDb
+        state: directory
+        mode: "0755"
+
     - name: Load docker-compose file
       copy:
         src: "{{ GITHUB_WORKSPACE }}/docker-compose-prod.yml"
