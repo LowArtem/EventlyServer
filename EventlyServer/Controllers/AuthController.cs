@@ -21,8 +21,6 @@ public class AuthController : BaseApiController
 
     public AuthController(UserService userService, IValidator<UserRegisterDto> registerValidator,
         IValidator<UserLoginDto> loginValidator)
-    public AuthController(UserService userService, IValidator<UserRegisterDto> registerValidator,
-        IValidator<UserLoginDto> loginValidator)
     {
         _userService = userService;
         _registerValidator = registerValidator;
@@ -172,22 +170,6 @@ public class AuthController : BaseApiController
     {
         HttpContext.Response.Cookies.Delete(Constants.COOKIE_ID);
         return Ok();
-    }
-
-    private void AppendAuthCookies(string token)
-    {
-        HttpContext.Response.Cookies.Append(Constants.COOKIE_ID, token, new CookieOptions
-        {
-            MaxAge = TimeSpan.FromMinutes(AuthOptions.LIFETIME)
-        });
-    }
-
-    private void AppendAuthCookies(string token)
-    {
-        HttpContext.Response.Cookies.Append(Constants.COOKIE_ID, token, new CookieOptions
-        {
-            MaxAge = TimeSpan.FromMinutes(AuthOptions.LIFETIME)
-        });
     }
 
     private void AppendAuthCookies(string token)
