@@ -1,5 +1,6 @@
 ﻿using EventlyServer.Data.Entities;
 using EventlyServer.Data.Mappers;
+using EventlyServer.Exceptions;
 using Microsoft.EntityFrameworkCore;
 
 namespace EventlyServer.Data;
@@ -23,24 +24,22 @@ public class InHolidayContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     {
-        if (!optionsBuilder.IsConfigured)
+        if (optionsBuilder.IsConfigured) return;
+        
+        var pgHost = Environment.GetEnvironmentVariable("POSTGRES_HOST");
+        var pgPort = Environment.GetEnvironmentVariable("POSTGRES_PORT");
+        var pgUser = Environment.GetEnvironmentVariable("POSTGRES_USER");
+        var pgPass = Environment.GetEnvironmentVariable("POSTGRES_PASSWORD");
+        var pgDb = Environment.GetEnvironmentVariable("POSTGRES_NAME");
+
+        if (pgHost == null || pgPort == null || pgUser == null || pgPass == null || pgDb == null)
         {
-            // Docker
-            var pgHost = Environment.GetEnvironmentVariable("DATABASE_HOST");
-            var pgPort = Environment.GetEnvironmentVariable("DATABASE_PORT");
-            var pgUser = Environment.GetEnvironmentVariable("DATABASE_USER");
-            var pgPass = Environment.GetEnvironmentVariable("DATABASE_PASSWORD");
-            var pgDb = Environment.GetEnvironmentVariable("DATABASE_NAME");
-
-            if (pgHost == null || pgPort == null || pgUser == null || pgPass == null || pgDb == null)
-                throw new ArgumentNullException(nameof(pgHost), "One of db config params is null");
-            
-            string connStr = $"Server={pgHost};Port={pgPort};User Id={pgUser};Password={pgPass};Database={pgDb};";
-            optionsBuilder.UseNpgsql(connStr);
-
-            // Localhost
-            // optionsBuilder.UseNpgsql("Host=localhost;Database=inHoliday;Username=postgres;Password=root");
+            throw new EnvironmentVariableNotFoundException(nameof(pgHost), nameof(pgPort), 
+                nameof(pgUser), nameof(pgPass), nameof(pgDb));
         }
+
+        var connStr = $"Server={pgHost};Port={pgPort};User Id={pgUser};Password={pgPass};Database={pgDb};";
+        optionsBuilder.UseNpgsql(connStr);
     }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
