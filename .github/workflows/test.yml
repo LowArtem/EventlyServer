@@ -46,7 +46,7 @@ jobs:
       - name: Fill the database with test data
         run: psql -h localhost:5432 -U ${{ secrets.POSTGRES_USER }} -d ${{ secrets.POSTGRES_NAME }} -a -f ./InitDb/Stage/base_fill.sql
 
-      - name: Test
+      - name: Run tests
         env:
           DATABASE_HOST: localhost
           DATABASE_PORT: 5432
