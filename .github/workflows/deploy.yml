@@ -2,7 +2,7 @@ name: Deploy update to server
 
 on:
   push:
-    branches: ["dev"] # TODO: должна быть master
+    branches: ["master"]
   workflow_dispatch:
 
 jobs:
