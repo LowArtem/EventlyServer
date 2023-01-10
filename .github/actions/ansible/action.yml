@@ -1,0 +1,13 @@
+name: Ansible playbook runner
+
+author: LowArtem
+description: Runs given ansible playbook on all given hosts (env CI_DEPLOY_SSH_KEY required)
+
+inputs:
+  playbookPath:
+    description: 'Path to the playbook to run'
+    required: true
+
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
