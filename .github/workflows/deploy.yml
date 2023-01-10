@@ -49,6 +49,9 @@ jobs:
           CI_DEPLOY_SSH_KEY: ${{ secrets.CI_DEPLOY_SSH_KEY }}
           GITHUB_WORKSPACE: $GITHUB_WORKSPACE
           DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          IMAGE_NAME: ${{ secrets.IMAGE_NAME }}
+          IMAGE_VERSION: ${{ secrets.IMAGE_VERSION }}
 
 
   restart:
@@ -67,3 +70,6 @@ jobs:
           CI_DEPLOY_SSH_KEY: ${{ secrets.CI_DEPLOY_SSH_KEY }}
           GITHUB_WORKSPACE: $GITHUB_WORKSPACE
           DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          IMAGE_NAME: ${{ secrets.IMAGE_NAME }}
+          IMAGE_VERSION: ${{ secrets.IMAGE_VERSION }}
