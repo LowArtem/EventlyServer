@@ -5,7 +5,4 @@
 
   tasks:
     - name: Restart docker-compose
-      shell: |
-        cd /app/inHoliday && docker stop $(docker ps -a -q) && \
-        docker rm $(docker ps -a -q) && \
-        doppler run --token='{{ DOPPLER_TOKEN }}' -- docker-compose up -d
+      include: restart_docker_compose_task.yml

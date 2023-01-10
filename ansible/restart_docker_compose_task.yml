@@ -1,0 +1,6 @@
+---
+- name: Restart docker-compose
+  shell: |
+    cd /app/inHoliday
+    docker compose down
+    doppler run --token='{{ DOPPLER_TOKEN }}' -- docker compose up -d
