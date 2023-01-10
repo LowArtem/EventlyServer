@@ -2,12 +2,10 @@ using System.Reflection;
 using EventlyServer.Data.Repositories;
 using EventlyServer.Data;
 using EventlyServer.Extensions;
-using EventlyServer.Extensions;
 using EventlyServer.Services;
 using EventlyServer.Services.Security;
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.AspNetCore.CookiePolicy;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.IdentityModel.Tokens;
@@ -61,8 +59,6 @@ public static class Program
 
             builder.Services.AddCors();
 
-            builder.Services.AddCors();
-
             builder.Services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
             builder.Services.AddDbContext<InHolidayContext>();
             builder.Services.AddRepositories();
@@ -71,15 +67,10 @@ public static class Program
 
             // builder.Services.AddAntiforgery(options => { options.HeaderName = "x-xsrf-token"; });
 
-
-            // builder.Services.AddAntiforgery(options => { options.HeaderName = "x-xsrf-token"; });
-
             builder.Services.AddMvcCore().AddNewtonsoftJson(o =>
             {
                 o.SerializerSettings.Converters.Add(new StringEnumConverter());
             });
-
-            // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen(options =>
@@ -151,7 +142,6 @@ public static class Program
             }
 
             // TODO: заменить * на фактический адрес клиента
-
             app.UseCors(o => o
                 .AllowAnyOrigin()
                 .AllowAnyMethod()
@@ -192,35 +182,11 @@ public static class Program
                 await next();
             });
 
-            // Middleware подстановки токена из куки
-            app.Use(async (context, next) =>
-            {
-                var token = context.Request.Cookies[Constants.COOKIE_ID];
-                if (!string.IsNullOrEmpty(token) && !context.Request.Headers.ContainsKey("Authorization"))
-                    context.Request.Headers.Add("Authorization", "Bearer " + token);
-
-                await next();
-            });
-
-            // Middleware добавление заголовков в ответ
-            app.Use(async (context, next) =>
-            {
-                context.Response.Headers.Add("X-Content-Type-Options", "nosniff");
-                context.Response.Headers.Add("X-Xss-Protection", "1");
-                context.Response.Headers.Add("X-Frame-Options", "DENY");
-
-                await next();
-            });
-
             app.UseAuthentication();
 
             // app.UseXsrfProtection();
 
-
-            // app.UseXsrfProtection();
-
             app.UseAuthorization();
-
 
             app.MapControllers();
 
