@@ -3,4 +3,4 @@
   shell: |
     cd /app/inHoliday
     docker compose down
-    doppler run --token='{{ DOPPLER_TOKEN }}' -- docker compose up -f docker-compose-prod.yml -d
+    doppler run --token='{{ DOPPLER_TOKEN }}' -- docker compose -f docker-compose-prod.yml up -d
