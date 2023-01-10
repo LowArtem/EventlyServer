@@ -1,9 +1,9 @@
 name: Deploy server configs
 
 on:
-  workflow_dispatch:
   push:
     branches: ["dev"] # TODO: должна быть master
+  workflow_dispatch:
 
 jobs:
   test:
