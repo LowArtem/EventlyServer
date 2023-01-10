@@ -6,7 +6,7 @@ using EventlyServer.Services;
 
 namespace EventlyServerTest.Services;
 
-public class GuestServiceTest : IDisposable
+public sealed class GuestServiceTest : IDisposable
 {
     private readonly GuestService _guestService;
     private readonly IRepository<Guest> _guestRepository;

@@ -1,0 +1,7 @@
+---
+- name: Restart docker-compose
+  shell: |
+    cd /app/inHoliday
+    docker compose down
+    docker pull {{ DOCKER_USERNAME }}/{{ IMAGE_NAME }}:{{ IMAGE_VERSION }}
+    doppler run --token='{{ DOPPLER_TOKEN }}' -- docker compose -f docker-compose-prod.yml up -d

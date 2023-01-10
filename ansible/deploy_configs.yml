@@ -1,0 +1,64 @@
+---
+- name: Deploy server configs
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Create remote folders
+      file:
+        path: /app/inHoliday/InitDb
+        state: directory
+        mode: "0755"
+
+    - name: Load docker-compose file
+      copy:
+        src: "{{ GITHUB_WORKSPACE }}/docker-compose-prod.yml"
+        dest: /app/inHoliday/docker-compose-prod.yml
+        owner: ansible
+        group: ansible
+        mode: u=rw,g=r,o=r
+      notify:
+        - Restart docker-compose
+
+    - name: Load nginx configuration file
+      copy:
+        src: "{{ GITHUB_WORKSPACE }}/nginx.conf"
+        dest: /app/inHoliday/nginx.conf
+        owner: ansible
+        group: ansible
+        mode: u=rw,g=r,o=r
+      notify:
+        - Restart docker-compose
+
+    - name: Load create db script
+      copy:
+        src: "{{ GITHUB_WORKSPACE }}/InitDb/common/create_tables.sql"
+        dest: /app/inHoliday/InitDb/create_tables.sql
+        owner: ansible
+        group: ansible
+        mode: u=rw,g=r,o=r
+      notify:
+        - Restart docker-compose
+
+    - name: Load fill db script
+      copy:
+        src: "{{ GITHUB_WORKSPACE }}/InitDb/Prod/base_fill.sql"
+        dest: /app/inHoliday/InitDb/fill_db.sql
+        owner: ansible
+        group: ansible
+        mode: u=rw,g=r,o=r
+      notify:
+        - Restart docker-compose
+
+    - name: Install doppler for env management
+      shell: |
+        sudo apt-get install -y apt-transport-https ca-certificates curl gnupg
+        curl -sLf --retry 3 --tlsv1.2 --proto "=https" 'https://packages.doppler.com/public/cli/gpg.DE2A7741A397C129.key' | sudo apt-key add -
+        echo "deb https://packages.doppler.com/public/cli/deb/debian any-version main" | sudo tee /etc/apt/sources.list.d/doppler-cli.list
+        sudo apt-get install doppler
+      notify:
+        - Restart docker-compose
+
+  handlers:
+    - name: Restart docker-compose
+      include: restart_docker_compose_task.yml

@@ -1,0 +1,60 @@
+name: Test
+
+on:
+  pull_request:
+    branches: ["master"]
+  workflow_call:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    environment: ci/cd
+
+    services:
+      postgres:
+        image: postgres:15.0
+        env:
+          POSTGRES_DB: ${{ secrets.POSTGRES_NAME }}
+          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+        ports:
+          - 5432:5432
+        # Set health checks to wait until postgres has started
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Setup .Net
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 6.0.x
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build --configuration Release --no-restore
+
+      - name: Set postgres password as an env variable
+        run: echo "PGPASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> $GITHUB_ENV
+
+      - name: Create the database
+        run: psql -h localhost -p 5432 -U ${{ secrets.POSTGRES_USER }} -d ${{ secrets.POSTGRES_NAME }} -a -f $GITHUB_WORKSPACE/InitDb/common/create_tables.sql
+
+      - name: Fill the database with test data
+        run: psql -h localhost -p 5432 -U ${{ secrets.POSTGRES_USER }} -d ${{ secrets.POSTGRES_NAME }} -a -f $GITHUB_WORKSPACE/InitDb/Stage/base_fill.sql
+
+      - name: Run tests
+        env:
+          POSTGRES_HOST: localhost
+          POSTGRES_PORT: 5432
+          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          POSTGRES_NAME: ${{ secrets.POSTGRES_NAME }}
+          AUTH_SECRET_KEY: ${{ secrets.AUTH_SECRET_KEY }}
+        run: dotnet test --configuration Release --no-build --verbosity normal

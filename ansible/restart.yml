@@ -1,0 +1,8 @@
+---
+- name: Restart webapp
+  hosts: all
+  become: yes
+
+  tasks:
+    - name: Restart docker-compose
+      include: restart_docker_compose_task.yml

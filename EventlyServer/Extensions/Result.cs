@@ -139,15 +139,7 @@ public struct Result
     /// <returns>Успешный результат</returns>
     public static Result Success()
         => new(true);
-
-    /// <summary>
-    /// Создание провального результата
-    /// </summary>
-    /// <param name="exception">Исключение, описывающее причину провала</param>
-    /// <returns>Провальный результат</returns>
-    public static Result Fail(Exception exception)
-        => new(exception);
-
+    
     /// <summary>
     /// Создание успешнного результата
     /// </summary>
@@ -156,6 +148,14 @@ public struct Result
     /// <returns>Успешный результат</returns>
     public static Result<T> Success<T>(T value)
         => new(value);
+
+    /// <summary>
+    /// Создание провального результата
+    /// </summary>
+    /// <param name="exception">Исключение, описывающее причину провала</param>
+    /// <returns>Провальный результат</returns>
+    public static Result Fail(Exception exception)
+        => new(exception);
 
     /// <summary>
     /// Создание провального результата

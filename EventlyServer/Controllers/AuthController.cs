@@ -48,6 +48,7 @@ public class AuthController : BaseApiController
         if (!validationResult.IsValid)
             return validationResult.ToResult().ToResponse();
 
+
         var token = await _userService.Register(user, false);
         if (!token.IsSuccess) return token.ConvertToEmptyResult().ToResponse();
 
@@ -82,11 +83,13 @@ public class AuthController : BaseApiController
     [ProducesResponseType(typeof(string), StatusCodes.Status409Conflict)]
     [ProducesResponseType(typeof(string), StatusCodes.Status500InternalServerError)]
     [ProducesResponseType(typeof(Nullable), StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(typeof(Nullable), StatusCodes.Status401Unauthorized)]
     public async Task<ActionResult> AddNewAdmin([FromBody] UserRegisterDto user)
     {
         var validationResult = await _registerValidator.ValidateAsync(user);
         if (!validationResult.IsValid)
             return validationResult.ToResult().ToResponse();
+
 
         var data = await _userService.Register(user, true);
         return data.ConvertToEmptyResult().ToResponse();
@@ -110,6 +113,7 @@ public class AuthController : BaseApiController
         var validationResult = await _loginValidator.ValidateAsync(user);
         if (!validationResult.IsValid)
             return validationResult.ToResult().ToResponse();
+
 
         var token = await _userService.Login(user.Email, user.Password);
         if (!token.IsSuccess) return token.ConvertToEmptyResult().ToResponse();

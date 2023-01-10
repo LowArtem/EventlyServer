@@ -1,0 +1,75 @@
+name: Deploy update to server
+
+on:
+  push:
+    branches: ["master"]
+  workflow_dispatch:
+
+jobs:
+  test:
+    uses: ./.github/workflows/test.yml
+    secrets: inherit
+
+
+  build:
+    needs: test
+
+    runs-on: ubuntu-latest
+    environment: ci/cd
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Log in to Docker Hub
+        uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
+        with:
+          username: ${{ secrets.docker_username }}
+          password: ${{ secrets.docker_password }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
+        with:
+          context: ./EventlyServer
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/${{ secrets.IMAGE_NAME }}:${{ secrets.IMAGE_VERSION }}
+
+
+  deploy_configs:
+    needs: test
+
+    runs-on: ubuntu-latest
+    environment: ci/cd
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: ./.github/actions/ansible
+        with:
+          playbookPath: ./ansible/deploy_configs.yml
+        env:
+          CI_DEPLOY_SSH_KEY: ${{ secrets.CI_DEPLOY_SSH_KEY }}
+          GITHUB_WORKSPACE: $GITHUB_WORKSPACE
+          DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          IMAGE_NAME: ${{ secrets.IMAGE_NAME }}
+          IMAGE_VERSION: ${{ secrets.IMAGE_VERSION }}
+
+
+  restart:
+    needs: build
+
+    runs-on: ubuntu-latest
+    environment: ci/cd
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Restart a server with new images
+        uses: ./.github/actions/ansible
+        with:
+          playbookPath: ./ansible/restart.yml
+        env:
+          CI_DEPLOY_SSH_KEY: ${{ secrets.CI_DEPLOY_SSH_KEY }}
+          GITHUB_WORKSPACE: $GITHUB_WORKSPACE
+          DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          IMAGE_NAME: ${{ secrets.IMAGE_NAME }}
+          IMAGE_VERSION: ${{ secrets.IMAGE_VERSION }}
