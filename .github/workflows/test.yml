@@ -44,10 +44,10 @@ jobs:
         run: echo "PGPASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> $GITHUB_ENV
 
       - name: Create the database
-        run: psql -h localhost -p 5432 -U ${{ secrets.POSTGRES_USER }} -d ${{ secrets.POSTGRES_NAME }} -a -f ./InitDb/common/create_database.sql
+        run: psql -h localhost -p 5432 -U ${{ secrets.POSTGRES_USER }} -d ${{ secrets.POSTGRES_NAME }} -a -f $GITHUB_WORKSPACE/InitDb/common/create_database.sql
 
       - name: Fill the database with test data
-        run: psql -h localhost -p 5432 -U ${{ secrets.POSTGRES_USER }} -d ${{ secrets.POSTGRES_NAME }} -a -f ./InitDb/Stage/base_fill.sql
+        run: psql -h localhost -p 5432 -U ${{ secrets.POSTGRES_USER }} -d ${{ secrets.POSTGRES_NAME }} -a -f $GITHUB_WORKSPACE/InitDb/Stage/base_fill.sql
 
       - name: Run tests
         env:
