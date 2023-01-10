@@ -14,9 +14,9 @@ jobs:
       postgres:
         image: postgres:15.0
         env:
-          POSTGRES_DB: ${{ secrets.POSTGRES_NAME }}
-          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
-          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          POSTGRES_DB: "${{ secrets.POSTGRES_NAME }}"
+          POSTGRES_USER: "${{ secrets.POSTGRES_USER }}"
+          POSTGRES_PASSWORD: "${{ secrets.POSTGRES_PASSWORD }}"
         ports:
           - 5432:5432
         # Set health checks to wait until postgres has started
@@ -50,8 +50,8 @@ jobs:
         env:
           DATABASE_HOST: localhost
           DATABASE_PORT: 5432
-          DATABASE_USER: ${{ secrets.POSTGRES_USER }}
-          DATABASE_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-          DATABASE_NAME: ${{ secrets.POSTGRES_NAME }}
-          AUTH_SECRET_KEY: ${{ secrets.AUTH_SECRET_KEY }}
+          DATABASE_USER: "${{ secrets.POSTGRES_USER }}"
+          DATABASE_PASSWORD: "${{ secrets.POSTGRES_PASSWORD }}"
+          DATABASE_NAME: "${{ secrets.POSTGRES_NAME }}"
+          AUTH_SECRET_KEY: "${{ secrets.AUTH_SECRET_KEY }}"
         run: dotnet test --configuration Release --no-build --verbosity normal
