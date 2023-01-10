@@ -1,12 +1,13 @@
 name: Deploy server configs
 
 on:
+  workflow_dispatch:
   push:
     branches: ["dev"] # TODO: должна быть master
 
 jobs:
-  # test:
-  #   uses: ./.github/workflows/test.yml@test
+  test:
+    uses: ./.github/workflows/test.yml@test
 
 
   # build:
@@ -33,7 +34,7 @@ jobs:
 
 
   deploy_configs:
-    # needs: test
+    needs: test
 
     runs-on: ubuntu-latest
     environment: ci/cd
@@ -44,6 +45,7 @@ jobs:
         env:
           CI_DEPLOY_SSH_KEY: ${{ secrets.CI_DEPLOY_SSH_KEY }}
           GITHUB_WORKSPACE: $GITHUB_WORKSPACE
+          DOPPLER_TOKEN: ${{ secrets.DOPPLER_TOKEN }}
 
 
   # TODO: заменить на ansible по возможности

@@ -50,7 +50,19 @@
       notify:
         - Restart docker-compose
 
+    - name: Install doppler for env management
+      shell: |
+        sudo apt-get install -y apt-transport-https ca-certificates curl gnupg
+        curl -sLf --retry 3 --tlsv1.2 --proto "=https" 'https://packages.doppler.com/public/cli/gpg.DE2A7741A397C129.key' | sudo apt-key add -
+        echo "deb https://packages.doppler.com/public/cli/deb/debian any-version main" | sudo tee /etc/apt/sources.list.d/doppler-cli.list
+        sudo apt-get install doppler
+      notify:
+        - Restart docker-compose
+
   handlers:
     - name: Restart docker-compose
-      # shell: cd /app/inHoliday && docker stop $(docker ps -a -q) && docker rm $(docker ps -a -q) && docker-compose up -d
+      # shell: |
+      #   cd /app/inHoliday && docker stop $(docker ps -a -q) && \
+      #   docker rm $(docker ps -a -q) && \
+      #   doppler run --token='{{ DOPPLER_TOKEN }}' -- docker-compose up -d
       shell: cd /home/ansible/ci_tests && echo "Hello, world!" >> test.txt
